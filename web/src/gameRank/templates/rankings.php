@@ -27,7 +27,7 @@
           class="d-flex flex-wrap align-items-center justify-content-between"
         >
           <a
-            href="index.html"
+            href="?command=showHomepage"
             class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none"
           >
             <span class="fs-3 logo">Game Rank</span>
@@ -41,14 +41,14 @@
             >
               <li>
                 <a
-                  href="index.html"
+                  href="?command=showHomepage"
                   class="nav-link px-2 link-body-emphasis"
                   >Home</a
                 >
               </li>
               <li>
                 <a
-                  href="rankgroup.html"
+                  href="?command=showRankGroup"
                   class="nav-link px-2 link-body-emphasis"
                   >Your Groups</a
                 >
@@ -92,11 +92,11 @@
               <ul class="dropdown-menu text-small">
                 <li><a class="dropdown-item" href="#">Create Group</a></li>
                 <li>
-                  <a class="dropdown-item" href="rankgroup.html">Your Groups</a>
+                  <a class="dropdown-item" href="?command=showRankGroup">Your Groups</a>
                 </li>
                 <li><a class="dropdown-item" href="#">Profile</a></li>
                 <li><hr class="dropdown-divider" ></li>
-                <li><a class="dropdown-item" href="login.html">Sign out</a></li>
+                <li><a class="dropdown-item" href="?command=logout">Sign out</a></li>
               </ul>
             </div>
           </div>
@@ -104,7 +104,7 @@
       </div>
     </header>
     <div class="d-flex justify-content-left">
-      <a tabindex="0" class="btn btn-primary" href="rankgroup.html" role="button">
+      <a tabindex="0" class="btn btn-primary" href="?command=showRankGroup" role="button">
         Back to Group
       </a>
     </div>

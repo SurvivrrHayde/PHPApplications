@@ -23,7 +23,7 @@
       <div class="row justify-content-center">
         <div class="col-md-4 mt-5">
           <div class="text-center margins">
-            <a href="index.html">
+            <a href="?command=showHomepage">
               <img src="images/controllerLogo.png" alt="Logo" style="width: 48px;">
             </a>
           </div>
@@ -33,11 +33,11 @@
               <form id="login-form" method="post" action="?command=login">
                 <div class="mb-3">
                   <label for="inputUsername" class="form-label white">Username</label>
-                  <input type="text" class="form-control" id="inputUsername" name="userName" required autofocus>
+                  <input type="text" class="form-control" id="inputUsername" name="userName" autofocus>
                 </div>
                 <div class="mb-3">
                   <label for="inputPassword" class="form-label white">Password</label>
-                  <input type="password" class="form-control" id="inputPassword" name="password"required>
+                  <input type="password" class="form-control" id="inputPassword" name="password">
                 </div>
                 <div class="d-grid mb-2">
                   <button class="btn btn-primary mt-1" type="submit">Sign in</button>
@@ -49,7 +49,7 @@
           <div class="card account-prompt-card text-center">
             <div class="card-body">
               <p class="d-inline white">Need an account?</p>
-              <a class="sign-up-link d-inline" style="color: #2989c5 !important;" href="signup.html">Create Account</a>
+              <a class="sign-up-link d-inline" style="color: #2989c5 !important;" href="?command=showSignup">Create Account</a>
             </div>
           </div>
         </div>

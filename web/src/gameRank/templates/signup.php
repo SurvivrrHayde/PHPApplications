@@ -34,28 +34,28 @@
                 <div class="row">
                   <div class="col-sm-6 mb-3">
                     <label for="inputFirstName" class="form-label white">First Name</label>
-                    <input type="text" class="form-control" id="inputFirstName" name="firstName" required>
+                    <input type="text" class="form-control" id="inputFirstName" name="firstName">
                   </div>
                   <div class="col-sm-6 mb-3">
                     <label for="inputLastName" class="form-label white">Last Name</label>
-                    <input type="text" class="form-control" id="inputLastName" name="lastName" required>
+                    <input type="text" class="form-control" id="inputLastName" name="lastName">
                   </div>
                 </div>
                 <div class="mb-3">
                   <label for="inputUsername" class="form-label white">Username</label>
-                  <input type="text" class="form-control" id="inputUsername" name="userName" required>
+                  <input type="text" class="form-control" id="inputUsername" name="userName">
                 </div>
                 <div class="mb-3">
                   <label for="inputEmail" class="form-label white">Email</label>
-                  <input type="email" class="form-control" id="inputEmail" name="email" required>
+                  <input type="email" class="form-control" id="inputEmail" name="email">
                 </div>
                 <div class="mb-3">
                   <label for="inputPassword" class="form-label white">Password</label>
-                  <input type="password" class="form-control" id="inputPassword" name="password" required>
+                  <input type="password" class="form-control" id="inputPassword" name="password">
                 </div>
                 <div class="mb-3">
                   <label for="inputConfirmPassword" class="form-label white">Confirm Password</label>
-                  <input type="password" class="form-control" id="inputConfirmPassword" name="confirmPassword" required>
+                  <input type="password" class="form-control" id="inputConfirmPassword" name="confirmPassword">
                 </div>
                 <div class="d-grid mb-2">
                   <button class="btn btn-primary mt-1" type="submit">Sign Up</button>
@@ -67,7 +67,7 @@
           <div class="card account-prompt-card text-center">
             <div class="card-body">
               <p class="d-inline white">Already have an account?</p>
-              <a class="sign-up-link d-inline" href="login.html">Sign In</a>
+              <a class="sign-up-link d-inline" href="?command=showLogin">Sign In</a>
             </div>
           </div>
         </div>

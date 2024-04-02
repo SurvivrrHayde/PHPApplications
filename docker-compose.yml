@@ -21,7 +21,7 @@ services:
       dockerfile: ./Dockerfile
     container_name: 'web'
     ports:
-      - 8080:80
+      - 8081:80
     volumes:
       - ./web/src/:/opt/src/
       - ./web/www/:/var/www/html/

@@ -8,8 +8,7 @@ spl_autoload_register(function ($classname) {
 });
 
 $controller = new GameRankController($_GET);
-$_SESSION['controller'] = $controller;
 
-$_SESSION['controller']->run();
+$controller->run();
 
 ?>

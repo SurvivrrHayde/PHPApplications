@@ -4,7 +4,6 @@ class GameRankController {
 
     private $db;
 
-    // An error message to display on the welcome page
     private $errorMessage = "";
 
     public function __construct($input) {
@@ -22,16 +21,31 @@ class GameRankController {
             case "showHomePage":
                 $this->showHomePage();
                 break;
+            case "showRankGroup":
+                $this->showRankGroup();
+                break;
             case "login":
+                if(isset($_SESSION['user'])) {
+                    $this->showHomePage();
+                }
                 $this->handleLogin();
                 break;
             case "showLogin":
+                if(isset($_SESSION['user'])) {
+                    $this->showHomePage();
+                }
                 $this->showLogin();
                 break;
             case "signup":
+                if(isset($_SESSION['user'])) {
+                    $this->showHomePage();
+                }
                 $this->handleSignup();
                 break;
             case "showSignup":
+                if(isset($_SESSION['user'])) {
+                    $this->showHomePage();
+                }
                 $this->showSignup();
                 break;
             case "logout":
@@ -55,14 +69,14 @@ class GameRankController {
                 $this->showLogin();
                 return;
             } else {
-                if (password_verify($password, $res[0]["password"])) {
+                if (password_verify($password, $res[0]["hashedpassword"])) {
                     $_SESSION['user'] = array(
                         'firstName' => $res[0]["firstName"],
                         'lastName' => $res[0]["lastName"],
                         'userName' => $userName,
                         'email' => $res[0]["email"],
                     );
-                    header("Location: ?command=homePage");
+                    header("Location: ?command=showHomePage");
                     return;
                 } else {
                     $this->errorMessage = "Password incorrect.";
@@ -96,17 +110,17 @@ class GameRankController {
             $password = $_POST['password'];
             $confirmPassword = $_POST['confirmPassword'];
 
-            if (!verifyEmail($email)) {
+            if (!$this->verifyEmail($email)) {
                 $this->errorMessage = "Email is not valid.";
                 $this->showSignup();
                 return;
             }
-            if (!verifyPassword($password)) {
+            if (!$this->verifyPassword($password)) {
                 $this->errorMessage = "Password must contain at least one symbol, capital letter, and number";
                 $this->showSignup();
                 return;
             }
-            if (!confirmPasswordMatches($password, $confirmPassword)) {
+            if (!$this->confirmPasswordMatches($password, $confirmPassword)) {
                 $this->errorMessage = "Passwords do not match.";
                 $this->showSignup();
                 return;
@@ -115,19 +129,18 @@ class GameRankController {
             $res = $this->db->query("select * from users where userName = $1;", $userName);
 
             if (empty($res)) {
-                $this->db->query("insert into users (firstName, lastName, userName, email, password) values ($1, $2, $3, $4, $5);",
+                $this->db->query("insert into users (firstName, lastName, userName, email, hashedpassword) values ($1, $2, $3, $4, $5);",
                     $firstName, $lastName, $userName, $email,
                     password_hash($password, PASSWORD_DEFAULT));
-                    $_SESSION['user'] = array(
-                        'firstName' => $firstName,
-                        'lastName' => $lastName,
-                        'userName' => $userName,
-                        'email' => $email,
-                    );
+                $_SESSION['user'] = array(
+                    'firstName' => $firstName,
+                    'lastName' => $lastName,
+                    'userName' => $userName,
+                    'email' => $email,
+                );
                 header("Location: ?command=showHomePage");
                 return;
             } else {
-                // User was in the database, verify password is correct
                 $this->errorMessage = "Username already in use.";
                 $this->showSignup();
                 return;
@@ -139,11 +152,16 @@ class GameRankController {
 
     public function handleLogout() {
         session_destroy();
+        session_start();
         header("Location: ?command=showHomePage");
     }
 
     public function showHomePage() {
         include("/opt/src/gameRank/templates/homePage.php");
+    }
+
+    public function showRankGroup() {
+        include("/opt/src/gameRank/templates/rankGroup.php");
     }
 
     public function showLogin() {
