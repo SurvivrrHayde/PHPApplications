@@ -45,7 +45,7 @@
               </li>
               <li>
                 <a
-                  href="rankgroup.html"
+                  href="?command=showGroups"
                   class="nav-link px-2 link-body-emphasis"
                   id="fix-me"
                   >Your Groups</a
@@ -57,7 +57,7 @@
                 >
               </li>
               <li>
-                <a href="#" class="nav-link px-2 link-body-emphasis"
+                <a href="?command=showCreateGroup" class="nav-link px-2 link-body-emphasis"
                   >Create Group</a
                 >
               </li>
@@ -88,9 +88,9 @@
                 >
               </a>
               <ul class="dropdown-menu text-small">
-                <li><a class="dropdown-item" href="#">Create Group</a></li>
+                <li><a class="dropdown-item" href="?command=showCreateGroup">Create Group</a></li>
                 <li>
-                  <a class="dropdown-item" href="?command=showRankGroup">Your Groups</a>
+                  <a class="dropdown-item" href="?command=showGroups">Your Groups</a>
                 </li>
                 <li><a class="dropdown-item" href="#">Profile</a></li>
                 <li><hr class="dropdown-divider" ></li>
