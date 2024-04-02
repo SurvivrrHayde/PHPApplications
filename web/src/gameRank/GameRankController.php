@@ -1,15 +1,28 @@
 <?php
 
+require_once "/opt/src/gameRank/igdb-master/class.igdb.php";
+
 class GameRankController {
 
     private $db;
 
     private $errorMessage = "";
 
+    private $igdb;
+
     public function __construct($input) {
         session_start();
         $this->db = new Database();
         $this->input = $input;
+        // TODO: hide these
+        // Instantiating IGDB Wrapper
+        try {
+            $IGDBAuth = IGDBUtils::authenticate("jngpgkkx3yv7iyfhgutzk6p9drrjjx", "9la1i41j5s4vxqwdqe74relqf1l4th");
+        }
+        catch (Exception $e) {
+            echo $e->getMessage();
+        }
+        $this->igdb = new IGDB("jngpgkkx3yv7iyfhgutzk6p9drrjjx", $IGDBAuth->access_token);
     }
 
     public function run() {
@@ -50,6 +63,9 @@ class GameRankController {
                 break;
             case "logout":
                 $this->handleLogout();
+                break;
+            case "search":
+                $this->searchGames();
                 break;
             default:
                 include("/opt/src/gameRank/templates/homePage.php");
@@ -182,6 +198,10 @@ class GameRankController {
             $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
         }
         include("/opt/src/gameRank/templates/signup.php");
+    }
+
+    public function searchGames() {
+        // TODO
     }
 }
 ?>
