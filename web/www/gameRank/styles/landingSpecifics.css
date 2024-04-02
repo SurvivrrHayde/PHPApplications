@@ -1,0 +1,79 @@
+html {
+  font-size: 16px;
+}
+
+h1,
+.h1 {
+  font-size: 3rem; /* For main titles */
+}
+
+h2,
+.h2 {
+  font-size: 2.5rem; /* For secondary titles */
+}
+
+h3,
+.h3 {
+  font-size: 2.25rem; /* For tertiary titles */
+}
+
+/* Body text */
+p,
+.text {
+  font-size: 1.2rem;
+  color: var(--color-grey-landing);
+}
+
+/* Smaller images */
+.img-fluid {
+  max-width: 90%;
+  height: auto;
+  border-radius: 5%;
+}
+
+/* Custom container size */
+.custom-container {
+  max-width: 1100px;
+  margin: auto;
+}
+
+.no-gaps > .row,
+.no-gaps > .row > [class^="col"] {
+  padding-right: 0;
+  padding-left: 0;
+  margin-right: 0;
+  margin-left: 0;
+}
+
+.img-cover {
+  width: 100%;
+  height: auto;
+}
+
+footer ul li {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+footer ul li:last-child {
+  margin-right: 0;
+}
+
+footer {
+  background-color: var(
+    --color-secondary
+  ); /* Adjust based on your color scheme */
+  color: var(--color-white);
+}
+
+footer a.text-white:hover {
+  text-decoration: underline;
+}
+
+footer .fab {
+  font-size: 1.5rem;
+}
+
+.btn-outline-primary {
+  color: #3292ce;
+}

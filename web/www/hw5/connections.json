@@ -1,0 +1,162 @@
+{
+    "Movies": [
+        "Fun",
+        "comedy",
+        "intertaining",
+        "long",
+        "chill",
+        "friends"
+    ],
+    "Elden Ring": [
+        "Tarnished",
+        "Malenia",
+        "Margit",
+        "Grafted",
+        "The Lands Between",
+        "Grace"
+    ],
+    "Pokemon": [
+        "Pikachu",
+        "Charizard",
+        "Bulbasaur",
+        "Geodude",
+        "Eevee",
+        "Zubat"
+    ],
+    "Soup Ingredients": [
+        "Celery",
+        "Carrots",
+        "Veggie Stock",
+        "Onions",
+        "Tomatoes",
+        "Chicken Stock"
+    ],
+    "Cooking": [
+        "chef",
+        "knife",
+        "range",
+        "plate",
+        "taste",
+        "fire"
+    ],
+    "Sailing": [
+        "Water",
+        "Wind",
+        "Rope",
+        "Boat",
+        "Sky",
+        "Sun"
+    ],
+    "UVA CS Professors": [
+        "Hott",
+        "Basit",
+        "Morrison",
+        "Stone",
+        "Horton",
+        "Nguyen"
+    ],
+    "Climate Change": [
+        "Polar Bears",
+        "Antarctica",
+        "Sea Level",
+        "Earth",
+        "Nature",
+        "Heat"
+    ],
+    "Classical Music": [
+        "Music",
+        "Songs",
+        "Composition",
+        "Broadway",
+        "Opera",
+        "Chopin"
+    ],
+    "Muppets": [
+        "Kermit",
+        "Miss Piggy",
+        "Fozzie Bear",
+        "Gonzo",
+        "Beaker",
+        "Swedish Chef"
+    ],
+    "Tennis": [
+        "Forehand",
+        "Backhand",
+        "Serve",
+        "Game",
+        "Set",
+        "Match"
+    ],
+    "Souls-like video games!": [
+        "Dark",
+        "soul",
+        "cinder",
+        "elden",
+        "ring",
+        "lies"
+    ],
+    "the history of tea": [
+        "tea",
+        "britain",
+        "green",
+        "earl grey",
+        "trade",
+        "tea leaves"
+    ],
+    "Formula 1 Racing": [
+        "speed",
+        "engineering",
+        "aerodynamics",
+        "skill",
+        "intense",
+        "electrifying"
+    ],
+    "Pineapple": [
+        "Sweet",
+        "Fingerprint",
+        "Spiky",
+        "Leaves",
+        "Juice",
+        "Pi\u00f1a Colada"
+    ],
+    "running": [
+        "shoes",
+        "miles",
+        "strava",
+        "pace",
+        "water",
+        "stretching"
+    ],
+    "Eurovision": [
+        "song",
+        "contest",
+        "voting",
+        "Europe",
+        "jury",
+        "public"
+    ],
+    "Dungeons and Dragons": [
+        "D20",
+        "bard",
+        "adventure",
+        "dragons",
+        "dungeons",
+        "dice"
+    ],
+    "UVA basketball": [
+        "Defense",
+        "JPJ",
+        "Bennett",
+        "Excitement",
+        "Intense",
+        "Loud"
+    ],
+    "Baking": [
+        "Cookies",
+        "Cakes",
+        "Bread",
+        "Sugar",
+        "Butter",
+        "Flour"
+    ]
+}

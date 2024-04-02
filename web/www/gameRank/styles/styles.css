@@ -1,0 +1,165 @@
+:root {
+  --color-primary: #b239b2;
+  --color-secondary: #1D1D58;
+  --color-accent: #1c7cb8;
+  --color-grey: #171a1f;
+  --color-black: #000016;
+  --color-white: #F0F8FF;
+  --color-accent-light: #5ec2f2;
+  --color-accent-dark: #1f688d;
+  --color-grey-light: #21262d;
+  --color-grey-lightest: #686868;
+  --color-grey-border: #787878;
+  --color-grey-landing: #a5a5a5;
+}
+
+@font-face {
+  font-family: 'Orbitron';
+  src: url('/fonts/Orbitron-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Roboto';
+  src: url('/fonts/Roboto-Regular.ttf') format('truetype');
+  font-weight: normal;
+  ;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'GameFont';
+  src: url('/fonts/Pixel\ Emulator.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+body {
+  font-family: 'Arial';
+  background-color: var(--color-grey);
+    background-color: var(--color-grey);
+}
+
+h1,
+h2,
+h3 {
+  font-family: 'Orbitron';
+  color: var(--color-white) !important;
+}
+
+p {
+  color: var(--color-grey-lightest);
+}
+
+.white {
+  color: var(--color-white) !important;
+}
+
+.logo {
+  font-family: fantasy;
+  color: var(--color-primary);
+}
+
+.mr-1 {
+  margin-right: 1rem;
+}
+
+.mt-1 {
+  margin-top: 1rem;
+}
+
+.nav-link.active {
+  color: var(--color-accent) !important;
+}
+
+.nav-link {
+  color: var(--color-white) !important;
+}
+.btn-primary {
+  background-color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.btn-outline-primary {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-accent-dark);
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--color-accent-dark);
+}
+
+.card {
+  background-color: var(--color-grey-light);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .1), 0 1px 2px rgba(0, 0, 0, .2);
+}
+
+.form-control {
+  background-color: var(--color-grey);
+  border-color: var(--color-grey-border);
+  color: var(--color-white) !important;
+}
+
+.form-control:focus {
+  box-shadow: 0 0 0 .25rem var(--color-accent);
+  background-color: var(--color-grey);
+}
+
+a {
+  color: var(--color-white);
+}
+
+.login-header {
+  color: var(--color-white);
+  margin-bottom: 1rem;
+}
+
+.account-prompt-card {
+  background-color: var(--color-grey);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, .1), 0 1px 2px rgba(0, 0, 0, .2);
+  margin-top: 1rem;
+}
+
+.account-prompt p,
+.account-prompt .sign-up-link {
+  color: var(--color-white);
+}
+
+.sign-up-link {
+  color: var(--color-accent);
+  text-decoration: none;
+}
+
+.sign-up-link:hover {
+  text-decoration: underline;
+}
+
+.margins {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.bg-image {
+  background: url('../images/landingWallpaper.jpg') no-repeat center center;
+  background-size: cover;
+  height: 100vh;
+  position: relative;
+  overflow: hidden;
+}
+
+body, html {
+  height: 100%;
+}
+
+.text-white {
+  color: var(--color-white);
+}
+
+.text-position-adjust {
+  margin-top: -10%;
+}
