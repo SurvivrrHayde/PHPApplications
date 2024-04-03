@@ -21,7 +21,6 @@ class GameGetter {
      * [id, name, coverURL]
      */
     public function searchForGamesAndCovers($searchText, $numGames = 4): array {
-        // TODO: maybe consider constructing string for this to get cover as well
         $ret = [];
         $builder = new IGDBQueryBuilder();
         try {
@@ -37,7 +36,20 @@ class GameGetter {
             $e->getMessage();
         }
         var_dump($query);
-
+        for ($i = 0; $i < $numGames; $i++) {
+            $toConcat = [];
+            $toConcat[] = $query[$i]->id;
+            $toConcat[] = $query[$i]->name;
+            if (isset($query[$i]->cover) && is_object($query[$i]->cover)) {
+                $strToModify = $query[$i]->cover->url;
+                $newStr = str_replace("t_thumb", "t_720p", $strToModify);
+                $toConcat[] = $newStr;
+            }
+            else {
+                $toConcat[] = "";
+            }
+            $ret[] = $toConcat;
+        }
         return $ret;
     }
 

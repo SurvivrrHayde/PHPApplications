@@ -18,7 +18,8 @@
 $searchText = $_POST["searchText"];
 // $games = $this->gameGetter->searchGame($searchText);
 // var_dump($games[0]);
-$test = $this->gameGetter->searchForGamesAndCovers($searchText);
+$searchResult = $this->gameGetter->searchForGamesAndCovers($searchText);
+var_dump($searchResult);
 //echo "<ul>";
 //for ($i = 0; $i < 4; $i++) {
 //    $query_result = $this->gameGetter->getGameAndCover($games[$i]);
