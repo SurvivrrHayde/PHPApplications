@@ -12,15 +12,12 @@
     <meta name="description" content="Game Rank">
     <meta name="keywords" content="video games, games">
     <title>Game Rank Game Search</title>
-    <style>
-
-    </style>
+    <link rel="stylesheet" href="styles\rankgroup.css">
 </head>
 <body>
-
 <?php
 include "navbar.php";
-// TODO: add pagination
+echo "<h1> Showing the top 10 results... </h1>";
 $searchText = $_POST["searchText"];
 $searchResult = $this->gameGetter->searchForGamesAndCovers($searchText);
 $numResults = count($searchResult);
@@ -36,9 +33,8 @@ for ($i = 0; $i < $numResults; $i++) {
             echo "<h5 class='card-title'> $game_name </h5>";
         echo "</div> </div> </div>";
 }
+// TODO: add pagination
 echo "</div>";
-
-
 ?>
 
 
