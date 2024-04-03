@@ -66,13 +66,14 @@ class GameGetter {
                 $builder
                 ->where("id = $gameID")
                 ->fields("name, summary, screenshots.url, cover.url, platforms.*, involved_companies.*, genres.name,
-                involved_companies.company.name, involved_companies.company.logo.url")
+                involved_companies.company.name, involved_companies.company.logo.url, release_dates.human")
                 ->build()
             );
         }
         catch (Exception $e) {
             echo $e->getMessage();
         }
+        var_dump($query);
         // Simple ones
         $ret["name"] = $query[0]->name;
         $ret["summary"] = $query[0]->summary;
@@ -108,6 +109,9 @@ class GameGetter {
             $platforms[] = $platforms_query[$i]->name;
         }
         $ret["platforms"] = $platforms;
+        // Getting release date
+        $ret["release_date"] = $query[0]->release_dates[0]->human;
+
         return $ret;
     }
 

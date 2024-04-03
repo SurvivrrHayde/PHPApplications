@@ -17,7 +17,7 @@
 include "navbar.php";
 $gameID = $_GET["id"];
 $gameInfo = $this->gameGetter->getGameDetail($gameID);
- var_dump($gameInfo);
+var_dump($gameInfo);
 
 
 ?>
