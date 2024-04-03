@@ -66,6 +66,9 @@ class GameRankController {
             case "joinGroup":
                 $this->handleJoinGroup();
                 break;
+            case "returnGroupJson":
+                $this->handleJsonGroup();
+                break;
             default:
                 include("/opt/src/gameRank/templates/homePage.php");
                 break;
@@ -273,6 +276,13 @@ class GameRankController {
                 return;
             }
         }
+    }
+    public function handleJsonGroup() {
+        $userName = $_SESSION['user']['userName'];
+        $res = $this->db->query("select g.groupID, g.name, g.creatorname, g.deadline from Groups g join GroupMembers gm on g.groupID = gm.groupID join Users u on gm.userID = u.userID where u.userName = $1", $userName);
+        header('Content-Type: application/json');
+        echo json_encode($res, JSON_PRETTY_PRINT);
+        exit;
     }
 }
 ?>
