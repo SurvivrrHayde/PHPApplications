@@ -29,7 +29,7 @@ for ($i = 0; $i < $numResults; $i++) {
     echo "<div class='col'>";
         echo "<div class='card h-100'>";
         echo "<a href='/gamerank/?command=detail&id=$game_id'>";
-        echo "<img alt='$game_name Cover' src='$img_src' />";
+        echo "<img alt='$game_name Cover' src='$img_src' class='card-img-top'/>";
         echo "</a>";
         echo "<div class='card-body'>";
             echo "<h5 class='card-title'> $game_name </h5>";
