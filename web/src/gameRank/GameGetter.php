@@ -29,49 +29,30 @@ class GameGetter {
                 ->fields("id, name, cover.*")
                 ->search($searchText)
                 ->limit($numGames)
+                ->offset(10)
                 ->build()
             );
         }
         catch (Exception $e) {
             $e->getMessage();
         }
-        var_dump($query);
         for ($i = 0; $i < $numGames; $i++) {
+            $item = $query[$i];
             $toConcat = [];
-            $toConcat[] = $query[$i]->id;
-            $toConcat[] = $query[$i]->name;
-            if (isset($query[$i]->cover) && is_object($query[$i]->cover)) {
-                $strToModify = $query[$i]->cover->url;
-                $newStr = str_replace("t_thumb", "t_720p", $strToModify);
-                $toConcat[] = $newStr;
+            $toConcat[] = $item->id;
+            $toConcat[] = $item->name;
+            if (isset($item->cover) && is_object($item->cover)) {
+                $image_id = $item->cover->image_id;
+                $url = IGDBUtils::image_url($image_id, "720p");
             }
             else {
-                $toConcat[] = "";
+                $url = "";
             }
+            $toConcat[] = $url;
             $ret[] = $toConcat;
         }
         return $ret;
     }
-
-    public function getGameIDs($searchText, $numGames = 4): array {
-        $ret = [];
-        $builder = new IGDBQueryBuilder();
-        try {
-            $query = $this->igdb->game(
-                $builder
-                ->search($searchText)
-                ->fields("name, id, cover.*")
-                ->limit(1)
-                ->build()
-            );
-        }
-        catch (Exception $e) {
-            $e->getMessage();
-        }
-        var_dump($query);
-        return $ret;
-    }
-
 
 
     /**
