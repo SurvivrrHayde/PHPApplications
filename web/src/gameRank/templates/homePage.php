@@ -48,22 +48,6 @@
         <div class="col-10 col-md-8 col-lg-6"> <!-- Adjust the column sizes as needed -->
           <h1 class="text-whie">Welcome to Game Rank</h1>
           <p class="text-white">Your ultimate destination for video game rankings, reviews, and more.</p>
-            <?php
-
-            // your query string
-            $query = 'search "uncharted"; fields id,name,cover; limit 5; offset 10;';
-
-            try {
-                // executing the query
-                $games = $this->igdb->game($query);
-
-                // showing the results
-                var_dump($games);
-            } catch (IGDBEndpointException $e) {
-                // a non-successful response recieved from the IGDB API
-                echo $e->getMessage();
-            }
-            ?>
         </div>
       </div>
     </div>
