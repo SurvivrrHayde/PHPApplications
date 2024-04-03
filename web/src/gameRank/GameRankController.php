@@ -202,6 +202,7 @@ class GameRankController {
 
     public function searchGames() {
         // TODO
+
     }
 }
 ?>
