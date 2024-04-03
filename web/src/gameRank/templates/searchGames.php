@@ -28,7 +28,10 @@
 include "navbar.php";
 //$curPage = $_GET["page"];
 // TODO: make this post instead
-$searchText = $_POST["searchText"];
+if (!isset($_GET["searchText"])) {
+    $_GET["searchText"] = $_POST["searchText"];
+}
+$searchText = $_GET["searchText"];
 $searchResult = $this->gameGetter->searchForGamesAndCovers($searchText, $_GET["page"] * 16);
 $numResults = count($searchResult);
 $overallResults = $this->gameGetter->getNumberOfSearchResults($searchText);
@@ -62,7 +65,7 @@ $lastPageNumResults = $overallResults % 16;
                 echo "<span class='page-link'>$i</span></li>";
             }
             else {
-                echo "<li class='page-item'> <a class='page-link' href='?command=search&page=$i'> $i </a></li>";
+                echo "<li class='page-item'> <a class='page-link' href='?command=search&page=$i&searchText=$searchText'> $i </a></li>";
             }
         }
         ?>

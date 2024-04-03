@@ -57,7 +57,12 @@ class GameRankController {
                 $this->handleLogout();
                 break;
             case "search":
-                $this->searchGames();
+                if (!isset($_GET["searchText"])) {
+                    header("Location: ?command=search&page=1&searchText=" . ($_POST["searchText"]));
+                }
+                else {
+                    $this->searchGames();
+                }
                 break;
             case "detail":
                 $this->showGameDetails();

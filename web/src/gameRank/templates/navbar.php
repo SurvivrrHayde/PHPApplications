@@ -46,6 +46,7 @@
                         aria-label="Search"
                         name="searchText"
                     >
+                    <button type="submit" class="btn btn-primary">Search</button>
                 </form>
 
                 <div class="dropdown text-end">
