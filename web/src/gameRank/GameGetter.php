@@ -55,12 +55,13 @@ class GameGetter {
 
 
     /**
-     *
+     * Queries IGDB for info about the game. Returns an array of info including
      */
-    public function getGameDetail() {
+    public function getGameDetail($gameID): array {
+        $ret = [];
 
+
+
+        return $ret;
     }
-
-
-
 }

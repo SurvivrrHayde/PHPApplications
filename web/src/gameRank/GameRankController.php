@@ -59,6 +59,9 @@ class GameRankController {
             case "search":
                 $this->searchGames();
                 break;
+            case "detail":
+                $this->showGameDetails();
+                break;
             default:
                 include("/opt/src/gameRank/templates/homePage.php");
                 break;
@@ -199,6 +202,11 @@ class GameRankController {
         // TODO
         include("/opt/src/gameRank/templates/searchGames.php");
 
+    }
+
+    public function showGameDetails() {
+        // TODO
+        include("/opt/src/gameRank/templates/gameDetail.php");
     }
 }
 ?>
