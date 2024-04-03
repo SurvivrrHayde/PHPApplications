@@ -39,7 +39,7 @@
                     </li>
                 </ul>
 
-                <form action="?command=search" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" method="post">
+                <form action="?command=search&page=1" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" method="post">
                     <input
                         class="form-control"
                         placeholder="Search Games..."

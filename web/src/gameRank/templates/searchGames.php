@@ -13,14 +13,26 @@
     <meta name="keywords" content="video games, games">
     <title>Game Rank Game Search</title>
     <link rel="stylesheet" href="styles\rankgroup.css">
+    <style>
+        #page {
+
+        }
+
+        #pagination-numbers {
+
+        }
+    </style>
 </head>
 <body>
 <?php
 include "navbar.php";
-echo "<h1> Showing the top 10 results... </h1>";
+//$curPage = $_GET["page"];
+// TODO: make this post instead
 $searchText = $_POST["searchText"];
-$searchResult = $this->gameGetter->searchForGamesAndCovers($searchText);
+$searchResult = $this->gameGetter->searchForGamesAndCovers($searchText, $_GET["page"] * 16);
 $numResults = count($searchResult);
+$overallResults = $this->gameGetter->getNumberOfSearchResults($searchText);
+echo "<h1> Got " . $overallResults . " Results </h1>";
 echo "<div class='card-group justify-content-start'>";
 for ($i = 0; $i < $numResults; $i++) {
     $game_name = $searchResult[$i][1];
@@ -38,7 +50,24 @@ for ($i = 0; $i < $numResults; $i++) {
 // TODO: Handle bad returns / no results
 // TODO: add pagination
 echo "</div>";
+$pages = intdiv($overallResults, 16);
+$lastPageNumResults = $overallResults % 16;
 ?>
+<nav aria-label="..." id="page">
+    <ul class="pagination pagination-lg" id="pagination-numbers">
+        <?php
+        for ($i = 1; $i <= $pages; $i++) {
+            if ($_GET["page"] == $i) {
+                echo "<li class='page-item active' aria-current='page'>";
+                echo "<span class='page-link'>$i</span></li>";
+            }
+            else {
+                echo "<li class='page-item'> <a class='page-link' href='?command=search&page=$i'> $i </a></li>";
+            }
+        }
+        ?>
+    </ul>
+</nav>
 
 
 <!-- Include Bootstrap JS -->

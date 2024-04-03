@@ -199,13 +199,13 @@ class GameRankController {
      * Returns top 4 game search hits according to IGDB API
      */
     public function searchGames() {
-        // TODO
+        if (!isset($_GET["page"])) {
+            $_GET["page"] = 1;
+        }
         include("/opt/src/gameRank/templates/searchGames.php");
-
     }
 
     public function showGameDetails() {
-        // TODO
         include("/opt/src/gameRank/templates/gameDetail.php");
     }
 }

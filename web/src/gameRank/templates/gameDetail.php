@@ -103,7 +103,11 @@
                 </li>
                 <li class="list-group-item">
                     <b>Developer: </b> <?= $company ?>
-                    <img src="<?= $company_logo ?>" alt="<?= $company ?> logo " class='company-logo'"/>
+                    <?php
+                    if ($company_logo) {
+                        echo "<img src='$company_logo' alt='$company logo' class='company-logo' />";
+                    }
+                    ?>
                 </li>
                 <li class="list-group-item">
                     <b>Genres: </b>

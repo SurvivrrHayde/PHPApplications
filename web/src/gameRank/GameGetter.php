@@ -20,7 +20,7 @@ class GameGetter {
      * Returns the top $numGames games and covers as an array in the form:
      * [id, name, coverURL]
      */
-    public function searchForGamesAndCovers($searchText, $numGames = 10): array {
+    public function searchForGamesAndCovers($searchText, $offset = 0, $numGames = 16): array {
         $ret = [];
         $builder = new IGDBQueryBuilder();
         try {
@@ -29,6 +29,7 @@ class GameGetter {
                 ->fields("id, name, cover.*")
                 ->search($searchText)
                 ->limit($numGames)
+                ->offset($offset)
                 ->build()
             );
         }
@@ -117,8 +118,18 @@ class GameGetter {
         return $ret;
     }
 
-    public function getImage($imageID, $resolution = "720p") {
-        return IGDBUtils::image_url($imageID, $resolution);
+    public function getNumberOfSearchResults($searchText): int {
+        $builder = new IGDBQueryBuilder();
+        try {
+            $query = $this->igdb->game_count($builder
+                ->search($searchText)
+            );
+        }
+        catch (Exception $e) {
+            $e->getMessage();
+            return 0;
+        }
+        return $query;
     }
 
 }
