@@ -75,20 +75,16 @@
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-md-4 mt-5">
-          <h3 class="login-header text-center">Create Group</h3>
+          <h3 class="login-header text-center">Join Group</h3>
           <div class="card">
             <div class="card-body">
-              <form id="login-form" method="post" action="?command=createGroup">
+              <form id="login-form" method="post" action="?command=joinGroup">
                 <div class="mb-3">
                   <label for="inputGroupName" class="form-label white">Group Name</label>
                   <input type="text" class="form-control" id="inputGroupName" name="groupName" autofocus>
                 </div>
-                <div class="mb-3">
-                  <label for="inputDeadline" class="form-label white">Deadline</label>
-                  <input type="date" class="form-control" id="inputDeadline" name="deadline">
-                </div>
                 <div class="d-grid mb-2">
-                  <button class="btn btn-primary mt-1" type="submit">Create Group</button>
+                  <button class="btn btn-primary mt-1" type="submit">Join Group</button>
                 </div>
               </form>
               <?=$message?>

@@ -52,7 +52,7 @@
                 >
               </li>
               <li>
-                <a href="#" class="nav-link px-2 link-body-emphasis"
+                <a href="?command=showJoinGroup" class="nav-link px-2 link-body-emphasis"
                   >Join Group</a
                 >
               </li>

@@ -55,10 +55,16 @@ class GameRankController {
                 $this->showGroups();
                 break;
             case "showCreateGroup":
-                $this->showCreateGroups();
+                $this->showCreateGroup();
                 break;
             case "createGroup":
                 $this->handleCreateGroup();
+                break;
+            case "showJoinGroup":
+                $this->showJoinGroup();
+                break;
+            case "joinGroup":
+                $this->handleJoinGroup();
                 break;
             default:
                 include("/opt/src/gameRank/templates/homePage.php");
@@ -182,7 +188,7 @@ class GameRankController {
         include("/opt/src/gameRank/templates/groups.php");
     }
 
-    public function showCreateGroups() {
+    public function showCreateGroup() {
         // Show an optional error message if the errorMessage field
         // is not empty.
         $message = "";
@@ -231,12 +237,42 @@ class GameRankController {
                 return;
             } else {
                 $this->errorMessage = "Group name already in use.";
-                $this->showCreateGroups();
+                $this->showCreateGroup();
                 return;
             }
         }
         $this->errorMessage = "Error creating group - group name and deadline is required";
-        $this->showCreateGroups();
+        $this->showCreateGroup();
+    }
+
+    public function showJoinGroup() {
+        // Show an optional error message if the errorMessage field
+        // is not empty.
+        $message = "";
+        if (!empty($this->errorMessage)) {
+            $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
+        }
+        include("/opt/src/gameRank/templates/joinGroup.php");
+    }
+
+    public function handleJoinGroup() {
+        if (isset($_POST['groupName']) && !empty($_POST['groupName'])) {
+            $groupName = $_POST['groupName'];
+            $userId = $_SESSION['user']['userId'];
+
+            $res = $this->db->query("select * from Groups where name = $1;", $groupName);
+            $groupId = $res[0]['groupid'];
+            if (!empty($res)) {
+                $this->db->query("insert into GroupMembers (groupId, userId) values ($1, $2);",
+                    $groupId, $userId);
+                header("Location: ?command=showGroups");
+                return;
+            } else {
+                $this->errorMessage = "Group name doesn't exist.";
+                $this->showJoinGroup();
+                return;
+            }
+        }
     }
 }
 ?>

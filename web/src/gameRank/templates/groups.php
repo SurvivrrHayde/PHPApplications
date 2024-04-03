@@ -39,7 +39,7 @@
                                 Groups</a>
                         </li>
                         <li>
-                            <a href="#" class="nav-link px-2 link-body-emphasis">Join Group</a>
+                            <a href="?command=showJoinGroup" class="nav-link px-2 link-body-emphasis">Join Group</a>
                         </li>
                         <li>
                             <a href="?command=showCreateGroup" class="nav-link px-2 link-body-emphasis">Create Group</a>
@@ -56,7 +56,7 @@
                             <img src="images/mario.png" alt="mdo" width="32" height="32" class="rounded-circle">
                         </a>
                         <ul class="dropdown-menu text-small">
-                            <li><a class="dropdown-item" href="#">Create Group</a></li>
+                            <li><a class="dropdown-item" href="?command=showCreateGroup">Create Group</a></li>
                             <li>
                                 <a class="dropdown-item" href="?command=showGroups">Your Groups</a>
                             </li>
@@ -74,7 +74,6 @@
 
     <div class="container py-5">
         <div class="row">
-            <?php $_SESSION['debug']?>
             <?php if (isset($_SESSION['groups']) && count($_SESSION['groups']) > 0): ?>
                 <?php foreach ($_SESSION['groups'] as $group): ?>
                     <div class="col-md-4 mb-4">

@@ -54,12 +54,12 @@
                 >
               </li>
               <li>
-                <a href="#" class="nav-link px-2 link-body-emphasis"
+                <a href="?command=showJoinGroup" class="nav-link px-2 link-body-emphasis"
                   >Join Group</a
                 >
               </li>
               <li>
-                <a href="#" class="nav-link px-2 link-body-emphasis"
+                <a href="?command=showCreateGroup" class="nav-link px-2 link-body-emphasis"
                   >Create Group</a
                 >
               </li>
@@ -90,7 +90,7 @@
                 >
               </a>
               <ul class="dropdown-menu text-small">
-                <li><a class="dropdown-item" href="#">Create Group</a></li>
+                <li><a class="dropdown-item" href="?command=showCreateGroup">Create Group</a></li>
                 <li>
                   <a class="dropdown-item" href="?command=showRankGroup">Your Groups</a>
                 </li>
