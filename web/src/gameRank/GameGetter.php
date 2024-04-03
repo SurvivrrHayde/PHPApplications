@@ -20,7 +20,7 @@ class GameGetter {
      * Returns the top $numGames games and covers as an array in the form:
      * [id, name, coverURL]
      */
-    public function searchForGamesAndCovers($searchText, $numGames = 4): array {
+    public function searchForGamesAndCovers($searchText, $numGames = 10): array {
         $ret = [];
         $builder = new IGDBQueryBuilder();
         try {
@@ -29,7 +29,6 @@ class GameGetter {
                 ->fields("id, name, cover.*")
                 ->search($searchText)
                 ->limit($numGames)
-                ->offset(10)
                 ->build()
             );
         }

@@ -15,21 +15,19 @@
 </head>
 <body>
 <?php
+// TODO: add pagination
 $searchText = $_POST["searchText"];
-// $games = $this->gameGetter->searchGame($searchText);
-// var_dump($games[0]);
 $searchResult = $this->gameGetter->searchForGamesAndCovers($searchText);
- var_dump($searchResult);
-//echo "<ul>";
-//for ($i = 0; $i < 4; $i++) {
-//    $query_result = $this->gameGetter->getGameAndCover($games[$i]);
-//    echo "<li>";
-//        $img_src = $query_result["img_url"];
-//        echo "<img alt='Game Cover' src='$img_src' />";
-//        echo $query_result["game"];
-//    echo "</li>";
-//}
-//echo "</ul>";
+$numResults = count($searchResult);
+echo "<ul>";
+for ($i = 0; $i < $numResults; $i++) {
+    echo "<li>";
+        $img_src = $searchResult[$i][2];
+        echo "<img alt='Game Cover' src='$img_src' />";
+        echo $searchResult[$i][1];
+    echo "</li>";
+}
+echo "</ul>";
 
 
 ?>
