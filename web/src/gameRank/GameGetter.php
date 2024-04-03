@@ -33,7 +33,7 @@ class GameGetter {
             );
         }
         catch (Exception $e) {
-            $e->getMessage();
+            echo $e->getMessage();
         }
         for ($i = 0; $i < $numGames; $i++) {
             $item = $query[$i];
@@ -55,13 +55,83 @@ class GameGetter {
 
 
     /**
-     * Queries IGDB for info about the game. Returns an array of info including
+     * Queries IGDB for info about the game. Returns an array of info in the format:
+     * [name, company, genre, platform, summary, release_date, screenshot_url_array, cover_url, company_logo_url]
      */
     public function getGameDetail($gameID): array {
+        // TODO: if too many API requests per second, consider sleeping() between some of the queries
         $ret = [];
-
-
-
+        $builder = new IGDBQueryBuilder();
+        // This query handles name, summary, storyline, screenshots, cover,
+        try {
+            $first_query = $this->igdb->game(
+                $builder
+                ->id($gameID)
+                ->fields("name, summary, screenshots.*, cover.*")
+                ->build()
+            );
+            sleep(1);
+            // This query handles company name, company logo
+            // TODO: not working
+            $second_query = $this->igdb->company(
+                $builder
+                ->id($gameID)
+                ->fields("name, logo")
+                ->build()
+            );
+            sleep(1);
+            // This query handles platform
+            // TODO: not working
+            $third_query = $this->igdb->platform(
+                $builder
+                ->id($gameID)
+                ->fields("name")
+                ->build()
+            );
+            sleep(1); // Break up API calls
+            // This query handles genre
+            // TODO: not working
+            $fourth_query = $this->igdb->genre(
+                $builder
+                ->id($gameID)
+                ->fields("name")
+                ->build()
+            );
+            sleep(1);
+            // This query handles release date
+            $fifth_query = $this->igdb->release_date(
+                $builder
+                ->id($gameID)
+                ->fields("human")
+                ->build()
+            );
+            var_dump($second_query);
+            // Plaintext
+            $ret["name"] = $first_query[0]->name;
+            $ret["company"] = $second_query[0]->company;
+            $ret["genre"] = $fourth_query[0]->name;
+            $ret["summary"] = $first_query[0]->summary;
+            $ret["platform"] = $third_query[0]->name;
+            $ret["release_date"] = $fifth_query[0]->human;
+            // Images
+            $screenshots_array = $first_query[0]->screenshots;
+            $ret["cover"] = $first_query[0]->cover->url;
+            $ret["company_logo"] = $second_query[0]->logo->url;
+            $screenshots = [];
+            for ($i = 0; $i < count($screenshots_array); $i++) {
+                $screenshots[] = $screenshots_array[$i]->url;
+            }
+            $ret["screenshots"] = $screenshots;
+        }
+        catch (Exception $e) {
+            echo $e->getMessage();
+        }
         return $ret;
     }
+
+    public function getImage($imageID, $resolution = "720p") {
+        return IGDBUtils::image_url($imageID, $resolution);
+    }
+
 }
+

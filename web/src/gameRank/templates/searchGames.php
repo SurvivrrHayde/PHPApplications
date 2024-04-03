@@ -35,6 +35,7 @@ for ($i = 0; $i < $numResults; $i++) {
             echo "<h5 class='card-title'> $game_name </h5>";
         echo "</div> </div> </div>";
 }
+// TODO: Handle bad returns / no results
 // TODO: add pagination
 echo "</div>";
 ?>
