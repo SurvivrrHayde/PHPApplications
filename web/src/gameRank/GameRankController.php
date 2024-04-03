@@ -8,21 +8,13 @@ class GameRankController {
 
     private $errorMessage = "";
 
-    private $igdb;
+    private $gameGetter;
 
     public function __construct($input) {
         session_start();
         $this->db = new Database();
         $this->input = $input;
-        // TODO: hide these
-        // Instantiating IGDB Wrapper
-        try {
-            $IGDBAuth = IGDBUtils::authenticate("jngpgkkx3yv7iyfhgutzk6p9drrjjx", "9la1i41j5s4vxqwdqe74relqf1l4th");
-        }
-        catch (Exception $e) {
-            echo $e->getMessage();
-        }
-        $this->igdb = new IGDB("jngpgkkx3yv7iyfhgutzk6p9drrjjx", $IGDBAuth->access_token);
+        $this->gameGetter = new GameGetter();
     }
 
     public function run() {
@@ -200,8 +192,12 @@ class GameRankController {
         include("/opt/src/gameRank/templates/signup.php");
     }
 
+    /**
+     * Returns top 4 game search hits according to IGDB API
+     */
     public function searchGames() {
         // TODO
+        include("/opt/src/gameRank/templates/searchGames.php");
 
     }
 }
