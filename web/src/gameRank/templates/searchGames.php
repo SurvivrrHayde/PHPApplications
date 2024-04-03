@@ -12,22 +12,31 @@
     <meta name="description" content="Game Rank">
     <meta name="keywords" content="video games, games">
     <title>Game Rank Game Search</title>
+    <style>
+
+    </style>
 </head>
 <body>
+
 <?php
+include "navbar.php";
 // TODO: add pagination
 $searchText = $_POST["searchText"];
 $searchResult = $this->gameGetter->searchForGamesAndCovers($searchText);
 $numResults = count($searchResult);
-echo "<ul>";
+echo "<div class='card-group justify-content-start'>";
 for ($i = 0; $i < $numResults; $i++) {
-    echo "<li>";
-        $img_src = $searchResult[$i][2];
-        echo "<img alt='Game Cover' src='$img_src' />";
-        echo $searchResult[$i][1];
-    echo "</li>";
+    $game_name = $searchResult[$i][1];
+    $game_id = $searchResult[$i][0];
+    $img_src = $searchResult[$i][2];
+    echo "<div class='col'>";
+        echo "<div class='card h-100'>";
+        echo "<img alt='$game_name Cover' src='$img_src' />";
+        echo "<div class='card-body'>";
+            echo "<h5 class='card-title'> $game_name </h5>";
+        echo "</div> </div> </div>";
 }
-echo "</ul>";
+echo "</div>";
 
 
 ?>
