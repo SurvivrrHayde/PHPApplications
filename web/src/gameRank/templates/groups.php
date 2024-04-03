@@ -20,10 +20,12 @@
 <body>
     <!-- Navbar -->
     <header class="p-3 mb-3 border-bottom navbar-dark bg-dark">
-        <div class="container">
+        <div class="col-md-11 offset-md-1">
             <div class="d-flex flex-wrap align-items-center justify-content-between">
                 <a href="?command=showHomepage"
                     class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
+                    <img src="images/controllerLogo.png" alt="Logo" height="30"
+                        style="margin-right: 10px; margin-top: -10px;">
                     <span class="fs-3 logo">Game Rank</span>
                 </a>
 

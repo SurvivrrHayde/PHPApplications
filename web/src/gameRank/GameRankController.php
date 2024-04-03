@@ -261,8 +261,8 @@ class GameRankController {
             $userId = $_SESSION['user']['userId'];
 
             $res = $this->db->query("select * from Groups where name = $1;", $groupName);
-            $groupId = $res[0]['groupid'];
             if (!empty($res)) {
+                $groupId = $res[0]['groupid'];
                 $this->db->query("insert into GroupMembers (groupId, userId) values ($1, $2);",
                     $groupId, $userId);
                 header("Location: ?command=showGroups");
