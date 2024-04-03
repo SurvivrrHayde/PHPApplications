@@ -99,14 +99,14 @@
         <div class="col-md-6">
             <ul class="list-group">
                 <li class="list-group-item">
-                    Release Date: <?= $release_date ?>
+                    <b> Release Date: </b> <?= $release_date ?>
                 </li>
                 <li class="list-group-item">
-                    Developer: <?= $company ?>
+                    <b>Developer: </b> <?= $company ?>
                     <img src="<?= $company_logo ?>" alt="<?= $company ?> logo " class='company-logo'"/>
                 </li>
                 <li class="list-group-item">
-                    Genres:
+                    <b>Genres: </b>
                     <?php
                     for ($i = 0; $i < count($genres); $i++) {
                         echo $genres[$i] . ", ";
@@ -114,10 +114,10 @@
                     ?>
                 </li>
                 <li class="list-group-item">
-                    Platforms:
+                    <b>Platforms:</b>
                     <?php
                     for ($i = 0; $i < count($platforms); $i++) {
-                        echo "<li>" . $platforms[$i] . "<img src='$platform_logos[$i]' alt='$platforms[$i] logo' class='console-logo'/>" . "</li>";
+                        echo "<li class='list-group-item'>" . $platforms[$i] . "<img src='$platform_logos[$i]' alt='$platforms[$i] logo' class='console-logo'/>" . "</li>";
                     }
                     ?>
                 </li>
