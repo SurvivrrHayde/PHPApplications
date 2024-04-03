@@ -37,11 +37,13 @@ class GameGetter {
     }
 
     /**
-     * For displaying games on the ranking page
+     * For displaying games on the ranking page, given a successful searchGame() query, $obj
      */
-    public function getGameAndCover() {
-
-
+    public function getGameAndCover($obj) {
+        $ret = [];
+        $ret["game"] = $obj->name;
+        $ret["img_url"] = IGDBUtils::image_url($obj->cover, "720p");
+        return $ret;
     }
 
 
