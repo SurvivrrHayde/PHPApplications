@@ -17,41 +17,49 @@ class GameGetter {
 
     /**
      * Queries IGDB for a game based on what the user types (can be incomplete game name)
-     * Returns the top 4 (default) games and covers
+     * Returns the top $numGames games and covers as an array in the form:
+     * [id, name, coverURL]
      */
-    public function searchGame($searchText, $numGames = 4) {
+    public function searchForGamesAndCovers($searchText, $numGames = 4): array {
         // TODO: maybe consider constructing string for this to get cover as well
+        $ret = [];
         $builder = new IGDBQueryBuilder();
         try {
-            $query = $builder
+            $query = $this->igdb->game(
+                $builder
+                ->fields("id, name, cover.*")
                 ->search($searchText)
                 ->limit($numGames)
-                ->offset(10)
-                ->build();
+                ->build()
+            );
         }
         catch (Exception $e) {
-            echo $e->getMessage();
+            $e->getMessage();
         }
-        $games = $this->igdb->game($query);
-        return $games;
-    }
+        var_dump($query);
 
-    public function getGameCover($gameId) {
-        $builder = new IGDBQueryBuilder();
-        $query = $builder->id($gameId);
-        return $this->igdb->cover($query)->image_id;
-    }
-
-    /**
-     * For displaying games on the ranking page, given a successful searchGame() query, $obj
-     */
-    public function getGameAndCover($obj) {
-        $ret = [];
-        $ret["game"] = $obj->name;
-        // $ret["img_url"] = IGDBUtils::image_url($obj->cover, "720p")
-        // $ret["img_url"] = $this->getGameCover();
         return $ret;
     }
+
+    public function getGameIDs($searchText, $numGames = 4): array {
+        $ret = [];
+        $builder = new IGDBQueryBuilder();
+        try {
+            $query = $this->igdb->game(
+                $builder
+                ->search($searchText)
+                ->fields("name, id, cover.*")
+                ->limit(1)
+                ->build()
+            );
+        }
+        catch (Exception $e) {
+            $e->getMessage();
+        }
+        var_dump($query);
+        return $ret;
+    }
+
 
 
     /**
