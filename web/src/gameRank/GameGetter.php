@@ -59,73 +59,55 @@ class GameGetter {
      * [name, company, genre, platform, summary, release_date, screenshot_url_array, cover_url, company_logo_url]
      */
     public function getGameDetail($gameID): array {
-        // TODO: if too many API requests per second, consider sleeping() between some of the queries
         $ret = [];
         $builder = new IGDBQueryBuilder();
-        // This query handles name, summary, storyline, screenshots, cover,
         try {
-            $first_query = $this->igdb->game(
+            $query = $this->igdb->game(
                 $builder
-                ->id($gameID)
-                ->fields("name, summary, screenshots.*, cover.*")
+                ->where("id = $gameID")
+                ->fields("name, summary, screenshots.url, cover.url, platforms.*, involved_companies.*, genres.name,
+                involved_companies.company.name, involved_companies.company.logo.url")
                 ->build()
             );
-            sleep(1);
-            // This query handles company name, company logo
-            // TODO: not working
-            $second_query = $this->igdb->company(
-                $builder
-                ->id($gameID)
-                ->fields("name, logo")
-                ->build()
-            );
-            sleep(1);
-            // This query handles platform
-            // TODO: not working
-            $third_query = $this->igdb->platform(
-                $builder
-                ->id($gameID)
-                ->fields("name")
-                ->build()
-            );
-            sleep(1); // Break up API calls
-            // This query handles genre
-            // TODO: not working
-            $fourth_query = $this->igdb->genre(
-                $builder
-                ->id($gameID)
-                ->fields("name")
-                ->build()
-            );
-            sleep(1);
-            // This query handles release date
-            $fifth_query = $this->igdb->release_date(
-                $builder
-                ->id($gameID)
-                ->fields("human")
-                ->build()
-            );
-            var_dump($second_query);
-            // Plaintext
-            $ret["name"] = $first_query[0]->name;
-            $ret["company"] = $second_query[0]->company;
-            $ret["genre"] = $fourth_query[0]->name;
-            $ret["summary"] = $first_query[0]->summary;
-            $ret["platform"] = $third_query[0]->name;
-            $ret["release_date"] = $fifth_query[0]->human;
-            // Images
-            $screenshots_array = $first_query[0]->screenshots;
-            $ret["cover"] = $first_query[0]->cover->url;
-            $ret["company_logo"] = $second_query[0]->logo->url;
-            $screenshots = [];
-            for ($i = 0; $i < count($screenshots_array); $i++) {
-                $screenshots[] = $screenshots_array[$i]->url;
-            }
-            $ret["screenshots"] = $screenshots;
         }
         catch (Exception $e) {
             echo $e->getMessage();
         }
+        // Simple ones
+        $ret["name"] = $query[0]->name;
+        $ret["summary"] = $query[0]->summary;
+        $ret["cover"] = str_replace("t_thumb", "t_720p", $query[0]->cover->url);
+        $screenshots_from_query = $query[0]->screenshots;
+        $screenshots = [];
+        for ($i = 0; $i < count($screenshots_from_query); $i++) {
+            $screenshots[] = str_replace("t_thumb", "t_720p", $screenshots_from_query[$i]->url);
+        }
+        $ret["screenshots"] = $screenshots;
+        // Hard ones
+        $genres_from_query = $query[0]->genres;
+        $genres = [];
+        for ($i = 0; $i < count($genres_from_query); $i++) {
+            $genres[] = $genres_from_query[$i]->name;
+        }
+        $ret["genres"] = $genres;
+        $involved_companies_query = $query[0]->involved_companies;
+        // Finding developer
+        for ($i = 0; $i < count($involved_companies_query); $i++) {
+            if ($involved_companies_query[$i]->developer) {
+                $company = $involved_companies_query[$i]->company->name;
+                $company_logo = str_replace("t_thumb", "t_720p", $involved_companies_query[$i]->company->logo->url);
+                break;
+            }
+        }
+        $ret["company"] = $company;
+        $ret["company_logo"] = $company_logo;
+        // Getting platforms
+        $platforms_query = $query[0]->platforms;
+        $platforms = [];
+        for ($i = 0; $i < count($platforms_query); $i++) {
+            $platforms[] = $platforms_query[$i]->name;
+        }
+        $ret["platforms"] = $platforms;
         return $ret;
     }
 
