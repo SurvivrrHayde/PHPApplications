@@ -6,7 +6,6 @@
     <!-- Include Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
-    <link rel="stylesheet" href="styles/rankgroup.css">
     <link rel="stylesheet" href="styles/styles.css">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -58,6 +57,7 @@
                             <img src="images/mario.png" alt="mdo" width="32" height="32" class="rounded-circle">
                         </a>
                         <ul class="dropdown-menu text-small">
+                            <li><a class="dropdown-item" href="?command=returnGroupJson">Output JSON</a></li>
                             <li><a class="dropdown-item" href="?command=showCreateGroup">Create Group</a></li>
                             <li>
                                 <a class="dropdown-item" href="?command=showGroups">Your Groups</a>
