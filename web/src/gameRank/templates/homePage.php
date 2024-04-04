@@ -87,7 +87,7 @@
     <div class="container h-100">
       <div class="row h-100 align-items-center text-position-adjust">
         <div class="col-10 col-md-8 col-lg-6"> <!-- Adjust the column sizes as needed -->
-          <h1 class="text-white">Welcome to Game Rank</h1>
+          <h1 class="text-whie">Welcome to Game Rank</h1>
           <p class="text-white">Your ultimate destination for video game rankings, reviews, and more.</p>
         </div>
       </div>

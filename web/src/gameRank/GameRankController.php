@@ -1,15 +1,20 @@
 <?php
 
+require_once "/opt/src/gameRank/igdb-master/class.igdb.php";
+
 class GameRankController {
 
     private $db;
 
     private $errorMessage = "";
 
+    private $gameGetter;
+
     public function __construct($input) {
         session_start();
         $this->db = new Database();
         $this->input = $input;
+        $this->gameGetter = new GameGetter();
     }
 
     public function run() {
@@ -50,6 +55,17 @@ class GameRankController {
                 break;
             case "logout":
                 $this->handleLogout();
+                break;
+            case "search":
+                if (!isset($_GET["searchText"])) {
+                    header("Location: ?command=search&page=1&searchText=" . ($_POST["searchText"]));
+                }
+                else {
+                    $this->searchGames();
+                }
+                break;
+            case "detail":
+                $this->showGameDetails();
                 break;
             case "showGroups":
                 $this->showGroups();
@@ -220,7 +236,20 @@ class GameRankController {
         }
         include("/opt/src/gameRank/templates/signup.php");
     }
+  
+    /**
+     * Returns top 4 game search hits according to IGDB API
+     */
+    public function searchGames() {
+        if (!isset($_GET["page"])) {
+            $_GET["page"] = 1;
+        }
+        include("/opt/src/gameRank/templates/searchGames.php");
+    }
 
+    public function showGameDetails() {
+        include("/opt/src/gameRank/templates/gameDetail.php");
+    }
     public function handleCreateGroup() {
         if (isset($_POST['groupName']) && isset($_POST['deadline']) && !empty($_POST['groupName']) && !empty($_POST['deadline'])) {
             $groupName = $_POST['groupName'];
