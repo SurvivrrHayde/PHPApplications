@@ -32,7 +32,7 @@
                             aria-label="Search"
                             name="searchText"
                     >
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="submit" class="btn btn-primary">Search Games </button>
                 </form>
 
                 <div class="dropdown text-end">
