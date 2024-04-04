@@ -46,6 +46,7 @@
                             <a class="dropdown-item" href="?command=showGroups">Your Groups</a>
                         </li>
                         <li><a class="dropdown-item" href="#">Profile</a></li>
+                        <li><a class="dropdown-item" href="?command=returnGroupJson"> Export JSON</a></li>
                         <li>
                             <hr class="dropdown-divider">
                         </li>

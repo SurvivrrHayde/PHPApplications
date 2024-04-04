@@ -21,22 +21,27 @@
     <?php include "/opt/src/gameRank/templates/navbar.php"; ?>
     <div class="container py-5">
         <div class="row">
-            <?php if (isset($_SESSION['groups']) && count($_SESSION['groups']) > 0): ?>
+        <?php if (isset($_SESSION['groups']) && count($_SESSION['groups']) > 0): ?>
                 <?php foreach ($_SESSION['groups'] as $group): ?>
                     <div class="col-md-4 mb-4">
-                        <div class="card">
-                            <div class="card-body">
-                                <h5 class="card-title">
-                                    <?= $group['name'] ?>
-                                </h5>
-                                <p class="card-text">Creator's Username:
-                                    <?= $group['creatorname'] ?>
-                                </p>
-                                <p class="card-text">Deadline:
-                                    <?= $group['deadline'] ?>
-                                </p>
+                        <form action="?command=groupClicked" method="POST" style="height: 100%;">
+                            <div class="card" style="position; relative;">
+                                <div class="card-body">
+                                    <h5 class="card-title">
+                                        <?= $group['name'] ?>
+                                    </h5>
+                                    <p class="card-text">Creator's Username:
+                                        <?= $group['creatorname'] ?>
+                                    </p>
+                                    <p class="card-text">Deadline:
+                                        <?= $group['deadline'] ?>
+                                    </p>
+                                    <input type="hidden" name="command" value="groupClicked">
+                                    <input type="hidden" name="groupName" value="<?=$group['name']?>">
+                                    <button type="submit" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0"></button>
+                                </div>
                             </div>
-                        </div>
+                        </form>
                     </div>
                 <?php endforeach; ?>
             <?php else: ?>

@@ -23,6 +23,12 @@ class GameRankController {
             $command = $this->input["command"];
 
         switch ($command) {
+            case "returnGroupJson":
+                $this->handleJsonGroup();
+                break;
+            case "changeGameRanking":
+                $this->handleChangeGameRanking();
+                break;
             case "showHomePage":
                 $this->showHomePage();
                 break;
@@ -82,8 +88,8 @@ class GameRankController {
             case "joinGroup":
                 $this->handleJoinGroup();
                 break;
-            case "returnGroupJson":
-                $this->handleJsonGroup();
+            case "groupClicked":
+                $this->handleGroupClick();
                 break;
             default:
                 include("/opt/src/gameRank/templates/homePage.php");
@@ -197,6 +203,10 @@ class GameRankController {
     }
 
     public function showRankGroup() {
+        $groupId = $_SESSION['currentGroup']['groupId'];
+        $userId = $_SESSION['user']['userId'];
+        $res = $this->db->query("select g.name as gameName, ugr.ranking from UserGameRankings ugr join Games g on ugr.gameID = g.gameID where ugr.userID = $1 and ugr.groupID = $2 order by ugr.ranking asc", $userId, $groupId);
+        $_SESSION['currentGroup']['rankings'] = $res;
         include("/opt/src/gameRank/templates/rankGroup.php");
     }
 
@@ -312,6 +322,42 @@ class GameRankController {
         header('Content-Type: application/json');
         echo json_encode($res, JSON_PRETTY_PRINT);
         exit;
+    }
+
+    public function handleGroupClick() {
+        $groupName = $_POST['groupName'];
+        $res = $this->db->query("select * from Groups where name = $1;", $groupName);
+        $groupId = $res[0]["groupid"];
+        $deadline = $res[0]["deadline"];
+        $creatorName = $res[0]["creatorname"];
+        $res = $this->db->query("select u.username from Users u join GroupMembers gm on u.userID = gm.userID where gm.groupID = $1", $groupId);
+        $groupUsers = $res;
+        $userId = $_SESSION['user']['userId'];
+        $res = $this->db->query("select g.name as gameName, ugr.ranking from UserGameRankings ugr join Games g on ugr.gameID = g.gameID where ugr.userID = $1 and ugr.groupID = $2 order by ugr.ranking asc", $userId, $groupId);
+        $_SESSION['currentGroup'] = array(
+            'groupName' => $groupName,
+            'groupId' => $groupId,
+            'deadline' => $deadline,
+            'creatorName' => $creatorName,
+            'groupUsers' => $groupUsers,
+            'rankings' => $res,
+        );
+        header("Location: ?command=showRankGroup");
+    }
+
+    public function handleChangeGameRanking() {
+        $gameName = $_POST['gameName'];
+        error_log($gameName);
+        $ranking = $_POST['ranking'];
+        error_log($ranking);
+        $userId = $_SESSION['user']['userId'];
+        error_log($userId);
+        $groupId = $_SESSION['currentGroup']['groupId'];
+        error_log($groupId);
+        $res = $this->db->query("select * from Games where name = $1;", $gameName);
+        $gameId = $res[0]['gameid'];
+        $res = $this->db->query("insert into UserGameRankings (gameID, userId, groupId, ranking) values ($1, $2, $3, $4) on conflict (userId, groupId, ranking) do update set gameID = excluded.gameID", $gameId, $userId, $groupId, $ranking);
+        header("Location: ?command=showRankGroup");
     }
 }
 ?>

@@ -18,7 +18,7 @@
 
 <body>
     <!-- Navbar -->
-    <?php include "/opt/src/gameRank/templates/navbar.php"; ?>
+    <?php include "/students/wsd6vn/students/wsd6vn/private/gameRank/templates/navbar.php"; ?>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-4 mt-5">
