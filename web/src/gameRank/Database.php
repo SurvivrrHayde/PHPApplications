@@ -41,4 +41,17 @@ class Database {
 
         return pg_fetch_all($res);
     }
+
+    public function insertQuery($query, ...$params) {
+        $res = pg_query_params($this->dbConnector, $query, $params);
+    
+        if ($res === false) {
+            echo pg_last_error($this->dbConnector);
+            return false;
+        }
+    
+        $row = pg_fetch_row($res);
+        return $row ? $row[0] : false;
+    }
+    
 }

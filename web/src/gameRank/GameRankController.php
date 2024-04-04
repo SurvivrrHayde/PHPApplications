@@ -67,6 +67,24 @@ class GameRankController {
             case "detail":
                 $this->showGameDetails();
                 break;
+            case "showGroups":
+                $this->showGroups();
+                break;
+            case "showCreateGroup":
+                $this->showCreateGroup();
+                break;
+            case "createGroup":
+                $this->handleCreateGroup();
+                break;
+            case "showJoinGroup":
+                $this->showJoinGroup();
+                break;
+            case "joinGroup":
+                $this->handleJoinGroup();
+                break;
+            case "returnGroupJson":
+                $this->handleJsonGroup();
+                break;
             default:
                 include("/opt/src/gameRank/templates/homePage.php");
                 break;
@@ -91,6 +109,7 @@ class GameRankController {
                         'lastName' => $res[0]["lastName"],
                         'userName' => $userName,
                         'email' => $res[0]["email"],
+                        'userId' => $res[0]['userid'],
                     );
                     header("Location: ?command=showHomePage");
                     return;
@@ -145,7 +164,7 @@ class GameRankController {
             $res = $this->db->query("select * from users where userName = $1;", $userName);
 
             if (empty($res)) {
-                $this->db->query("insert into users (firstName, lastName, userName, email, hashedpassword) values ($1, $2, $3, $4, $5);",
+                $userId = $this->db->insertQuery("insert into users (firstName, lastName, userName, email, hashedpassword) values ($1, $2, $3, $4, $5) returning userid;",
                     $firstName, $lastName, $userName, $email,
                     password_hash($password, PASSWORD_DEFAULT));
                 $_SESSION['user'] = array(
@@ -153,6 +172,7 @@ class GameRankController {
                     'lastName' => $lastName,
                     'userName' => $userName,
                     'email' => $email,
+                    'userId' => $userId,
                 );
                 header("Location: ?command=showHomePage");
                 return;
@@ -180,6 +200,23 @@ class GameRankController {
         include("/opt/src/gameRank/templates/rankGroup.php");
     }
 
+    public function showGroups() {
+        $userName = $_SESSION['user']['userName'];
+        $res = $this->db->query("select g.groupID, g.name, g.creatorname, g.deadline from Groups g join GroupMembers gm on g.groupID = gm.groupID join Users u on gm.userID = u.userID where u.userName = $1", $userName);
+        $_SESSION['groups'] = $res;
+        include("/opt/src/gameRank/templates/groups.php");
+    }
+
+    public function showCreateGroup() {
+        // Show an optional error message if the errorMessage field
+        // is not empty.
+        $message = "";
+        if (!empty($this->errorMessage)) {
+            $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
+        }
+        include("/opt/src/gameRank/templates/createGroup.php");
+    }
+
     public function showLogin() {
         // Show an optional error message if the errorMessage field
         // is not empty.
@@ -199,7 +236,7 @@ class GameRankController {
         }
         include("/opt/src/gameRank/templates/signup.php");
     }
-
+  
     /**
      * Returns top 4 game search hits according to IGDB API
      */
@@ -212,6 +249,69 @@ class GameRankController {
 
     public function showGameDetails() {
         include("/opt/src/gameRank/templates/gameDetail.php");
+    }
+    public function handleCreateGroup() {
+        if (isset($_POST['groupName']) && isset($_POST['deadline']) && !empty($_POST['groupName']) && !empty($_POST['deadline'])) {
+            $groupName = $_POST['groupName'];
+            $userName = $_SESSION['user']['userName'];
+            $deadline = $_POST['deadline'];
+
+            $res = $this->db->query("select * from Groups where name = $1;", $groupName);
+
+            if (empty($res)) {
+                $userId = $_SESSION['user']['userId'];
+                $groupId = $this->db->insertQuery("insert into Groups (name, creatorName, deadline) values ($1, $2, $3) returning groupID;",
+                    $groupName, $userName, $deadline);
+                $_SESSION['debug'] = $userId;
+                $this->db->query("insert into GroupMembers (groupId, userId) values ($1, $2);",
+                    $groupId, $userId);
+                header("Location: ?command=showGroups");
+                return;
+            } else {
+                $this->errorMessage = "Group name already in use.";
+                $this->showCreateGroup();
+                return;
+            }
+        }
+        $this->errorMessage = "Error creating group - group name and deadline is required";
+        $this->showCreateGroup();
+    }
+
+    public function showJoinGroup() {
+        // Show an optional error message if the errorMessage field
+        // is not empty.
+        $message = "";
+        if (!empty($this->errorMessage)) {
+            $message = "<div class='alert alert-danger'>{$this->errorMessage}</div>";
+        }
+        include("/opt/src/gameRank/templates/joinGroup.php");
+    }
+
+    public function handleJoinGroup() {
+        if (isset($_POST['groupName']) && !empty($_POST['groupName'])) {
+            $groupName = $_POST['groupName'];
+            $userId = $_SESSION['user']['userId'];
+
+            $res = $this->db->query("select * from Groups where name = $1;", $groupName);
+            if (!empty($res)) {
+                $groupId = $res[0]['groupid'];
+                $this->db->query("insert into GroupMembers (groupId, userId) values ($1, $2);",
+                    $groupId, $userId);
+                header("Location: ?command=showGroups");
+                return;
+            } else {
+                $this->errorMessage = "Group name doesn't exist.";
+                $this->showJoinGroup();
+                return;
+            }
+        }
+    }
+    public function handleJsonGroup() {
+        $userName = $_SESSION['user']['userName'];
+        $res = $this->db->query("select g.groupID, g.name, g.creatorname, g.deadline from Groups g join GroupMembers gm on g.groupID = gm.groupID join Users u on gm.userID = u.userID where u.userName = $1", $userName);
+        header('Content-Type: application/json');
+        echo json_encode($res, JSON_PRETTY_PRINT);
+        exit;
     }
 }
 ?>
