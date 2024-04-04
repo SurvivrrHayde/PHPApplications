@@ -89,7 +89,11 @@
     <div class="row">
         <div class="col-md-4">
             <div class="card h-100">
-                <img src="<?= $cover ?>" alt="<?= $name ?> cover" class="game-img card-img-top"/>
+                <?php
+                if ($cover) {
+                    echo "<img src='$cover' alt='$name cover' class='game-img card-img-top' />";
+                }
+                ?>
                 <div class="card-body">
                     <h2 class="card-title"> <?= $name ?> </h2>
                     <p class="card-text"> <?= $summary ?></p>

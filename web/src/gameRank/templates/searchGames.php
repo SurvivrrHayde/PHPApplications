@@ -47,18 +47,18 @@ for ($i = 0; $i < $numResults; $i++) {
     $img_src = $searchResult[$i][2];
     echo "<div class='col'>";
         echo "<div class='card h-100'>";
-        echo "<a href='/gamerank/?command=detail&id=$game_id'>";
-        echo "<img alt='$game_name Cover' src='$img_src' class='card-img-top'/>";
-        echo "</a>";
+        if ($img_src) {
+            echo "<a href='/gamerank/?command=detail&id=$game_id'>";
+            echo "<img alt='$game_name Cover' src='$img_src' class='card-img-top'/>";
+            echo "</a>";
+        }
         echo "<div class='card-body'>";
             echo "<h5 class='card-title'> $game_name </h5>";
+            echo "<a href='/gamerank/?command=detail&id=$game_id'> Details </a>";
         echo "</div> </div> </div>";
 }
-// TODO: Handle bad returns / no results
-// TODO: add pagination
 echo "</div>";
 $pages = intdiv($overallResults, 16);
-$lastPageNumResults = $overallResults % 16;
 ?>
 <nav aria-label="..." id="page">
     <ul class="pagination pagination-lg" id="pagination-numbers">
