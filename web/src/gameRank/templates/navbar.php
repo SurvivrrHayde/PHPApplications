@@ -4,7 +4,7 @@
             <a href="?command=showHomepage"
                class="d-flex align-items-center mb-3 mb-md-0 me-md-auto link-body-emphasis text-decoration-none">
                 <img src="images/controllerLogo.png" alt="Logo" height="30" style="margin-right: 10px; margin-top: -10px;">
-                <span class="fs-3 logo">Game Rank</span>
+                <span class="fs-3 logo" style="color:white !important;">Game Rank</span>
             </a>
 
             <!-- Assuming you meant to have a visual or structural break here, but in a flex layout, this is managed differently. -->
@@ -12,16 +12,16 @@
             <div class="d-flex flex-wrap align-items-center">
                 <ul class="nav col-12 col-lg-auto mb-2 justify-content-center mb-md-0 mr-1">
                     <li>
-                        <a href="?command=showHomepage" class="nav-link px-2 link-body-emphasis">Home</a>
+                        <a href="?command=showHomepage" class="nav-link px-2 link-body-emphasis" style="color:white !important;">Home</a>
                     </li>
                     <li>
-                        <a href="?command=showGroups" class="nav-link px-2 link-body-emphasis">Your Groups</a>
+                        <a href="?command=showGroups" class="nav-link px-2 link-body-emphasis" style="color:white !important;">Your Groups</a>
                     </li>
                     <li>
-                        <a href="?command=showJoinGroup" class="nav-link px-2 link-body-emphasis">Join Group</a>
+                        <a href="?command=showJoinGroup" class="nav-link px-2 link-body-emphasis" style="color:white !important;">Join Group</a>
                     </li>
                     <li>
-                        <a href="?command=showCreateGroup" class="nav-link px-2 link-body-emphasis">Create Group</a>
+                        <a href="?command=showCreateGroup" class="nav-link px-2 link-body-emphasis" style="color:white !important;">Create Group</a>
                     </li>
                 </ul>
 
@@ -32,7 +32,7 @@
                             aria-label="Search"
                             name="searchText"
                     >
-                    <button type="submit" class="btn btn-primary">Search</button>
+                    <button type="submit" class="btn btn-primary">Search Games </button>
                 </form>
 
                 <div class="dropdown text-end">

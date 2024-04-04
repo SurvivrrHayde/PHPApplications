@@ -89,7 +89,11 @@
     <div class="row">
         <div class="col-md-4">
             <div class="card h-100">
-                <img src="<?= $cover ?>" alt="<?= $name ?> cover" class="game-img card-img-top"/>
+                <?php
+                if ($cover) {
+                    echo "<img src='$cover' alt='$name cover' class='game-img card-img-top' />";
+                }
+                ?>
                 <div class="card-body">
                     <h2 class="card-title"> <?= $name ?> </h2>
                     <p class="card-text"> <?= $summary ?></p>
@@ -121,7 +125,12 @@
                     <b>Platforms:</b>
                     <?php
                     for ($i = 0; $i < count($platforms); $i++) {
-                        echo "<li class='list-group-item'>" . $platforms[$i] . "<img src='$platform_logos[$i]' alt='$platforms[$i] logo' class='console-logo'/>" . "</li>";
+                        if ($platform_logos[$i]) {
+                            echo "<li class='list-group-item'>" . $platforms[$i] . "<img src='$platform_logos[$i]' alt='$platforms[$i] logo' class='console-logo'/>" . "</li>";
+                        }
+                        else {
+                            echo "<li class='list-group-item'>" . $platforms[$i]  . "</li>";
+                        }
                     }
                     ?>
                 </li>
@@ -134,9 +143,11 @@
             <div class="row">
                 <?php
                 for ($i = 0; $i < count($screenshots); $i++) {
-                    echo "<div class='col-md-4'>";
-                    echo "<img src='$screenshots[$i]' alt='$name screenshot' class='screenshot-img'/>";
-                    echo "</div>";
+                    if ($screenshots[$i]) {
+                        echo "<div class='col-md-4'>";
+                        echo "<img src='$screenshots[$i]' alt='$name screenshot' class='screenshot-img'/>";
+                        echo "</div>";
+                    }
                 }
                 ?>
             </div>
