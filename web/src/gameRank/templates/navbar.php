@@ -15,7 +15,7 @@
                         <a href="?command=showHomepage" class="nav-link px-2 link-body-emphasis">Home</a>
                     </li>
                     <li>
-                        <a href="?command=showRankGroup" class="nav-link px-2 link-body-emphasis">Your Groups</a>
+                        <a href="?command=showGroups" class="nav-link px-2 link-body-emphasis">Your Groups</a>
                     </li>
                     <li>
                         <a href="?command=showJoinGroup" class="nav-link px-2 link-body-emphasis">Join Group</a>
@@ -43,7 +43,7 @@
                     <ul class="dropdown-menu text-small">
                         <li><a class="dropdown-item" href="?command=showCreateGroup">Create Group</a></li>
                         <li>
-                            <a class="dropdown-item" href="?command=showRankGroup">Your Groups</a>
+                            <a class="dropdown-item" href="?command=showGroups">Your Groups</a>
                         </li>
                         <li><a class="dropdown-item" href="#">Profile</a></li>
                         <li>
