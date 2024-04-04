@@ -38,6 +38,10 @@ $overallResults = $this->gameGetter->getNumberOfSearchResults($searchText);
 echo "<h1> Got " . $overallResults . " Results </h1>";
 echo "<div class='card-group justify-content-start'>";
 for ($i = 0; $i < $numResults; $i++) {
+    // TODO: actually handle null query case
+    if (!isset($searchResult[$i])) {
+        continue;
+    }
     $game_name = $searchResult[$i][1];
     $game_id = $searchResult[$i][0];
     $img_src = $searchResult[$i][2];

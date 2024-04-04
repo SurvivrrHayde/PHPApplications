@@ -38,6 +38,10 @@ class GameGetter {
         }
         for ($i = 0; $i < $numGames; $i++) {
             $item = $query[$i];
+            // null query result case
+            if (!$item) {
+                continue;
+            }
             $toConcat = [];
             $toConcat[] = $item->id;
             $toConcat[] = $item->name;
