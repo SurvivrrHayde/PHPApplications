@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!--https://cs4640.cs.virginia.edu/wsd6vn/connections/-->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Thomas Arnold, Matthew Haid">
+    <meta name="description" content="Connections in JavaScript">
+    <link rel="stylesheet" href="bootstrap.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <title>Connections.js</title>
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="gameStatistics">
+            <!-- Game statistics go here -->
+            <h1>Connections.js!</h1>
+            <p>Welcome to Connections.js, where your challenge is to sift through four distinct categories, each containing four words. Your mission: identify the quartet belonging to the same category, then proceed to unravel the next three categories until none remain.</p>
+            <span class="row justify-content-center mb-3">
+                <p class="m-3" id="totalGamesPlayed">Total Games Played: </p>
+                <p class="m-3" id="totalWins">Total Wins: </p>
+                <p class="m-3" id="currentWinStreak">Current Win Streak: </p>
+                <p class="m-3" id="averageGuesses">Average Number of Guesses: </p>
+                <p class="m-3" id="currentGuessCount">Current Guess Count: </p>
+            </span>
+            <button id="startNewGame">New Game</button>
+            <button id="submitSelection">Submit Selection</button>
+            <button id="shuffle">Shuffle Words</button>
+            <button id="delete">Reset</button>
+        </div>
+        <div id="gameContent">
+            <div id="gameBoard">
+                <!-- 4x4 game board goes here -->
+            </div>
+            <div id="previousAnswers">
+                <!-- Previous answers go here -->
+            </div>
+        </div>
+    </div>
+    <script src="connections.js"></script>
+    <script src="game.js"></script>
+</body>
+</html>

@@ -1,0 +1,131 @@
+<!-- https://api.jquery.com/jQuery.ajax/ -->
+
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Lights Out</title>
+		<link rel="stylesheet" href="style.css" />
+		<script src="https://code.jquery.com/jquery-3.7.0.js"></script>
+		<script>
+			$(document).ready(function () {
+				const storedGame = JSON.parse(localStorage.getItem("currentGame"))
+				storedGame && renderBoard(storedGame)
+
+				$("#start-game-btn").click(function (event) {
+					event.preventDefault()
+					$("#message").html("")
+					localStorage.removeItem("currentGame")
+					const rows = parseInt($("#rows-input").val())
+					const columns = parseInt($("#columns-input").val())
+					
+					$.ajax({
+						url: "setup.php",
+						method: "GET",
+						data: { rows: rows, columns: columns },
+						dataType: "json",
+						success: function (data) {
+							const currentGame = data
+							const set = new Set(currentGame.lightsOn)
+							currentGame.lightsOn = [...set]
+							localStorage.setItem("currentGame", JSON.stringify(currentGame))
+							renderBoard(currentGame)
+						},
+						error: function (xhr, status, error) {
+							console.error("Error:", error)
+						},
+					})
+				})
+
+				function renderBoard(data) {
+					const lightsOn = new Set(data.lightsOn)
+					const columns = data.columns
+					const rows = data.rows
+
+					let board = "<div id='game-board' style='grid-template-columns: repeat(" + columns + ", 1fr);'>"
+					for (let i = 0; i < rows; i++) {
+						for (let j = 0; j < columns; j++) {
+							const boxNum = i * columns + j
+							const lightOn = lightsOn.has(boxNum)
+							const boxClass = lightOn ? "on" : "off"
+							board += "<div id='box-" + boxNum + "' class='box " + boxClass + "'></div>"
+						}
+					}
+					board += "</div>"
+					$("#game-container").html(board)
+
+					// Handle clicking a box
+					$(".box").click(function () {
+						clickBox($(this).attr("id"))
+					})
+
+					const numOn = lightsOn.size
+					if (numOn === 0) handleWin()
+				}
+
+				function clickBox(id) {
+					const boxID = parseInt(id.split("-")[1])
+					const currentGame = JSON.parse(localStorage.getItem("currentGame"))
+
+					const lightsOn = new Set(currentGame.lightsOn)
+					const columns = currentGame.columns
+					const rows = currentGame.rows
+
+					const boxAbove = boxID - columns < 0 ? -1 : boxID - columns
+					const boxBelow = boxID + columns > rows * columns - 1 ? -1 : boxID + columns
+					const boxLeft = boxID % columns === 0 ? -1 : boxID - 1
+					const boxRight = boxID % columns === columns - 1 ? -1 : boxID + 1
+
+					toggleBox(boxID, lightsOn)
+					boxAbove >= 0 && toggleBox(boxAbove, lightsOn)
+					boxBelow >= 0 && toggleBox(boxBelow, lightsOn)
+					boxLeft >= 0 && toggleBox(boxLeft, lightsOn)
+					boxRight >= 0 && toggleBox(boxRight, lightsOn)
+
+					currentGame.lightsOn = [...lightsOn]
+					localStorage.setItem("currentGame", JSON.stringify(currentGame))
+
+					const numOn = lightsOn.size
+					if (numOn === 0) handleWin()
+				}
+
+				function toggleBox(id, lightsOn) {
+					const boxOn = lightsOn.has(id)
+					boxOn ? lightsOn.delete(id) : lightsOn.add(id)
+					const boxID = "#box-" + id
+					if (boxOn) {
+						$(boxID).addClass("off")
+						$(boxID).removeClass("on")
+					} else {
+						$(boxID).addClass("on")
+						$(boxID).removeClass("off")
+					}
+				}
+
+				function handleWin() {
+					$(".box").off("click")
+					$("#message").html("You win!")
+				}
+			})
+		</script>
+	</head>
+	<body>
+		<div id="billboard">
+			<h1>Lights Out!</h1>
+			<p>Turn off all the lights to win.</p>
+			<form id="setup-form">
+				<label for="rows-input">Rows:</label>
+				<input type="number" id="rows-input" name="rows" min="1" max="10" value="3" />
+				<label for="columns-input">Columns:</label>
+				<input type="number" id="columns-input" name="columns" min="1" max="10" value="3" />
+				<button type="submit" id="start-game-btn">Start Game</button>
+			</form>
+			<span></span>
+		</div>
+		<span></span>
+		<h2 id="message"></h2>
+		<div id="game-container">
+		</div>
+	</body>
+</html>
