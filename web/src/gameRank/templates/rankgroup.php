@@ -44,48 +44,24 @@
   </div>
   <!-- Your Rankings -->
   <!-- TODO: make all cards float to the left, don't space them out automatically -->
-  <h1>Your Rankings:</h1>
-  <hr class="border">
-  <div class="card-group justify-content-start">
-    <div class="col">
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title"><?=$_SESSION['currentGroup']['rankings'][0]['gamename']?></h5>
-          <p class="card-text">Current Ranking: 1</p>
-          <form method="post" action="?command=changeGameRanking">
-            <label for="inputGameName">Change Game</label>
-            <input name="gameName" type="text">
-            <input name="ranking" type="hidden" value="1"/>
-            <button type="submit">Submit</button>
-          </form>
-        </div>
+  <div class="row" style="justify-content: left">
+      <div class="col-6">
+          <h1>Your Rankings:</h1>
       </div>
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title"><?=$_SESSION['currentGroup']['rankings'][1]['gamename']?></h5>
-          <p class="card-text">Current Ranking: 2</p>
-          <form method="post" action="?command=changeGameRanking">
-            <label for="inputGameName">Change Game</label>
-            <input name="gameName" type="text">
-            <input name="ranking" type="hidden" value="2"/>
-            <button type="submit">Submit</button>
+      <div class="col-6" style="justify-content: right">
+          <form action="?command=search&page=1" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" method="post">
+              <input
+                      class="form-control"
+                      placeholder="Search Games..."
+                      aria-label="Search"
+                      name="searchText"
+              >
+              <button type="submit" class="btn btn-primary">Search for a game to add it! </button>
           </form>
-        </div>
       </div>
-      <div class="card">
-        <div class="card-body">
-          <h5 class="card-title"><?=$_SESSION['currentGroup']['rankings'][2]['gamename']?></h5>
-          <p class="card-text">Current Ranking: 3</p>
-          <form method="post" action="?command=changeGameRanking">
-            <label for="inputGameName">Change Game</label>
-            <input name="gameName" type="text">
-            <input name="ranking" type="hidden" value="3"/>
-            <button type="submit">Submit</button>
-          </form>
-        </div>
-      </div>
-    </div>
   </div>
+  <hr class="border">
+
   <!-- Include Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
     integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
