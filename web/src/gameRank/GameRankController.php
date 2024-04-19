@@ -91,6 +91,9 @@ class GameRankController {
             case "groupClicked":
                 $this->handleGroupClick();
                 break;
+            case "addGroup":
+                $this->addGroup();
+                break;
             default:
                 include("/opt/src/gameRank/templates/homePage.php");
                 break;
@@ -358,6 +361,10 @@ class GameRankController {
         $gameId = $res[0]['gameid'];
         $res = $this->db->query("insert into UserGameRankings (gameID, userId, groupId, ranking) values ($1, $2, $3, $4) on conflict (userId, groupId, ranking) do update set gameID = excluded.gameID", $gameId, $userId, $groupId, $ranking);
         header("Location: ?command=showRankGroup");
+    }
+
+    public function addGroup() {
+
     }
 }
 ?>

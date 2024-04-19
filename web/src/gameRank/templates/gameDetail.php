@@ -127,8 +127,7 @@
                     for ($i = 0; $i < count($platforms); $i++) {
                         if ($platform_logos[$i]) {
                             echo "<li class='list-group-item'>" . $platforms[$i] . "<img src='$platform_logos[$i]' alt='$platforms[$i] logo' class='console-logo'/>" . "</li>";
-                        }
-                        else {
+                        } else {
                             echo "<li class='list-group-item'>" . $platforms[$i] . "</li>";
                         }
                     }
@@ -138,14 +137,26 @@
         </div>
         <div class="col-md-2">
             <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                    Add Game to Group...
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    Add Game to Group
                 </button>
                 <ul class="dropdown-menu">
-                    <?php
-
-
-                    ?>
+                    <?php if (isset($_SESSION["groups"]) && count($_SESSION["groups"]) > 0): ?>
+                        <?php foreach ($_SESSION["groups"] as $group): ?>
+                            <li>
+                                <!-- TODO: MAKE THIS ADD THE GAME-->
+                                <form action="?command=addGroup" method="POST">
+                                    <input type="hidden" name="command" value="addGroup">
+                                    <input type="hidden" name="group" value="<?= $group['name'] ?>">
+                                    <input type="hidden" name="gameId" value="<?= $_GET['id'] ?>">
+                                    <input type="hidden" name="gameName" value="<?= $name ?>">
+                                    <input type="hidden" name="gameImage" value="<?= $cover ?>">
+                                    <button type="submit"> <?= $group["name"] ?> </button>
+                                </form>
+                            </li>
+                        <?php endforeach ?>
+                    <?php endif ?>
                 </ul>
             </div>
         </div>
