@@ -23,6 +23,7 @@
   <h1 class="d-flex justify-content-center"><?= $_SESSION['currentGroup']['groupName'] ?> (<?= $_SESSION['currentGroup']['creatorName']?>'s Group)</h1>
   <h3 class="d-flex justify-content-center">Deadline: <?= $_SESSION['currentGroup']['deadline'] ?></h3>
   <div class="d-flex justify-content-center">
+      <!-- TODO: Use JavaScript to check final deadline -->
     <a href="?command=showRankGroup" tabindex="0" class="btn btn-primary" role="button" id="shutup">
       View Final Rankings
     </a>
