@@ -14,6 +14,60 @@
   <meta name="description" content="Game Rank">
   <meta name="keywords" content="video games, games">
   <title>Game Rank</title>
+    <style>
+        .card-img-top {
+            width: 100%;
+            height: 25vh;
+            object-fit: cover;
+        }
+
+        .card-group {
+            justify-content: start;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+
+        .col {
+            flex: 0 0 auto;
+            width: auto;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h3 {
+            text-align: center;
+        }
+
+        body {
+            background-color: #121212;
+            color: #fff;
+        }
+
+        .card {
+            background-color: #333;
+            color: #fff;
+            height: 400px;
+            width: 200px;
+        }
+
+        .card-title {
+            color: #fff;
+        }
+
+        .card-text {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .btn-primary {
+            background-color: #1c7cb8;
+            border-color: #1c7cb8;
+            margin-bottom: 10px;
+        }
+
+
+    </style>
 </head>
 
 <body>
@@ -33,7 +87,7 @@
     <h2>Users in this group:</h2>
       <?php foreach ($_SESSION['currentGroup']['groupUsers'] as $username): ?>
         <div class="col-md-4 mb-4">
-                <div class="card">
+                <div class="card h-100">
                     <div class="card-body">
                         <h5 class="card-title">
                             <?= $username['username'] ?>
@@ -62,7 +116,36 @@
       </div>
   </div>
   <hr class="border">
-
+  <?php $rankings = $_SESSION["currentGroup"]["rankings"]; ?>
+  <?php if(isset($rankings)): ?>
+    <div class="card-group justify-content-start">
+    <?php foreach($rankings as $game): ?>
+      <?php
+      $name = $game["gamename"];
+      $rank = $game["ranking"];
+      $coverQuery = $this->db->query("SELECT cover FROM Games WHERE name = $1", $name);
+      $cover = $coverQuery[0]["cover"];
+      $gameidQuery = $this->db->query("SELECT gameid FROM Games WHERE name = $1", $name);
+      $gameid = $gameidQuery[0]["gameid"];
+      ?>
+    <div class="col">
+        <div class="card h-100">
+            <img
+                src="<?= $cover ?>"
+                class="card-img-top"
+                alt="<?= $name ?> cover"
+            >
+            <div class="card-body">
+                <h5 class="card-title">
+                    <?= $rank ?>. <?= $name ?>
+                </h5>
+                <a style="color: #1c7cb8" href="/gamerank/?command=detail&id=<?= $gameid ?>"> Learn More </a>
+            </div>
+        </div>
+    </div>
+    <?php endforeach ?>
+    </div>
+  <?php endif ?>
   <!-- Include Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
     integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"

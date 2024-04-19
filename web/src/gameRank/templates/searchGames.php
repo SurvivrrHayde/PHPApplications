@@ -24,6 +24,7 @@
     </style>
 </head>
 <body>
+<!-- TODO: For JS dynamic behavior, use AJAX to see if user already has a game in a group-->
 <?php
 include "navbar.php";
 //$curPage = $_GET["page"];
