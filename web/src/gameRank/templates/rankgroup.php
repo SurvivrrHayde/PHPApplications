@@ -65,6 +65,8 @@
             border-color: #1c7cb8;
             margin-bottom: 10px;
         }
+
+
     </style>
 </head>
 
@@ -123,6 +125,8 @@
       $rank = $game["ranking"];
       $coverQuery = $this->db->query("SELECT cover FROM Games WHERE name = $1", $name);
       $cover = $coverQuery[0]["cover"];
+      $gameidQuery = $this->db->query("SELECT gameid FROM Games WHERE name = $1", $name);
+      $gameid = $gameidQuery[0]["gameid"];
       ?>
     <div class="col">
         <div class="card h-100">
@@ -135,6 +139,7 @@
                 <h5 class="card-title">
                     <?= $rank ?>. <?= $name ?>
                 </h5>
+                <a style="color: #1c7cb8" href="/gamerank/?command=detail&id=<?= $gameid ?>"> Learn More </a>
             </div>
         </div>
     </div>
