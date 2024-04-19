@@ -14,6 +14,58 @@
   <meta name="description" content="Game Rank">
   <meta name="keywords" content="video games, games">
   <title>Game Rank</title>
+    <style>
+        .card-img-top {
+            width: 100%;
+            height: 25vh;
+            object-fit: cover;
+        }
+
+        .card-group {
+            justify-content: start;
+            margin-bottom: 20px;
+            margin-top: 10px;
+        }
+
+        .col {
+            flex: 0 0 auto;
+            width: auto;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        h3 {
+            text-align: center;
+        }
+
+        body {
+            background-color: #121212;
+            color: #fff;
+        }
+
+        .card {
+            background-color: #333;
+            color: #fff;
+            height: 400px;
+            width: 200px;
+        }
+
+        .card-title {
+            color: #fff;
+        }
+
+        .card-text {
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .btn-primary {
+            background-color: #1c7cb8;
+            border-color: #1c7cb8;
+            margin-bottom: 10px;
+        }
+    </style>
 </head>
 
 <body>
@@ -33,7 +85,7 @@
     <h2>Users in this group:</h2>
       <?php foreach ($_SESSION['currentGroup']['groupUsers'] as $username): ?>
         <div class="col-md-4 mb-4">
-                <div class="card">
+                <div class="card h-100">
                     <div class="card-body">
                         <h5 class="card-title">
                             <?= $username['username'] ?>
@@ -62,7 +114,6 @@
       </div>
   </div>
   <hr class="border">
-  <!-- TODO: SHOW ALL GAMES -->
   <?php $rankings = $_SESSION["currentGroup"]["rankings"]; ?>
   <?php if(isset($rankings)): ?>
     <div class="card-group justify-content-start">
