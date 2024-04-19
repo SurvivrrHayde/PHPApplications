@@ -11,6 +11,28 @@
     <meta name="description" content="Game Rank">
     <meta name="keywords" content="video games, games">
     <title>Game Rank Detail</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            $("#addMessage").hide();
+            $(".addGameForm").submit(function(event) {
+                event.preventDefault();
+                let formData = $(this).serialize();
+                $.ajax({
+                    type: "POST",
+                    url: "?command=addGame",
+                    data: formData,
+                    success: function(response) {
+                        $("#addMessage").show();
+                        $("#addMessage").text("Game added successfully!");
+                    },
+                    error: function(response) {
+                        console.log(response);
+                    }
+                });
+            });
+        });
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -87,6 +109,12 @@
 <?php include "navbar.php"; ?>
 <div class="container">
     <div class="row">
+        <div class="col-12">
+            <!-- JS Add Game success/failure message -->
+            <div id="addMessage" class="alert alert-success" role="alert"></div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-4">
             <div class="card h-100">
                 <?php
@@ -142,13 +170,14 @@
                     Add Game to Group
                 </button>
                 <!-- TODO: Maybe have JS say if it's already been added to group? -->
+                <!-- TODO: if game already in group, handle it properly -->
                 <ul class="dropdown-menu">
                     <?php if (isset($_SESSION["groups"]) && count($_SESSION["groups"]) > 0): ?>
                         <?php foreach ($_SESSION["groups"] as $group): ?>
                             <li>
-                                <form action="?command=addGame" method="POST">
-                                    <input type="hidden" name="command" value="addGroup">
-                                    <input type="hidden" name="group" value="<?= $group['name'] ?>">
+                                <form class="addGameForm">
+                                    <input type="hidden" name="command" value="addGame">
+                                    <input type="hidden" name="groupName" value="<?= $group['name'] ?>">
                                     <input type="hidden" name="gameId" value="<?= $_GET['id'] ?>">
                                     <input type="hidden" name="gameName" value="<?= $name ?>">
                                     <input type="hidden" name="gameImage" value="<?= $cover ?>">

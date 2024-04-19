@@ -364,7 +364,7 @@ class GameRankController {
     }
 
     public function addGame() {
-        $group = $_POST["group"];
+        $group = $_POST["groupName"];
         $gameID = $_POST["gameId"];
         $gameName = $_POST["gameName"];
         $gameImage = $_POST["gameImage"];
@@ -378,9 +378,7 @@ class GameRankController {
             $nextRanking = 1;
         }
         $this->db->query("INSERT INTO UserGameRankings (groupid, userid, gameid, ranking) VALUES ($1, $2, $3, $4)", $groupID, $userID, $gameID, $nextRanking);
-        // Take user to group page
-        $_POST["groupName"] = $group;
-        header("Location: ?command=groupClicked");
+        header("Location: ?command=showRankGroup");
     }
 }
 ?>
