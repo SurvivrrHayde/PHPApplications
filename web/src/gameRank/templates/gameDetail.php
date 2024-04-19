@@ -191,7 +191,6 @@
                         <?php foreach ($_SESSION["groups"] as $group): ?>
                             <li>
                                 <form class="addGameForm">
-                                    <input type="hidden" name="command" value="addGame"> <!-- remove this -->
                                     <input type="hidden" name="groupName" value="<?= $group['name'] ?>">
                                     <input type="hidden" name="gameId" value="<?= $_GET['id'] ?>">
                                     <input type="hidden" name="gameName" value="<?= $name ?>">

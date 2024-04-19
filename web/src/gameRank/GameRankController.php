@@ -390,7 +390,7 @@ class GameRankController {
             $nextRanking = 1;
         }
         $this->db->query("INSERT INTO UserGameRankings (groupid, userid, gameid, ranking) VALUES ($1, $2, $3, $4)", $groupID, $userID, $gameID, $nextRanking);
-        echo json_encode(array("success" => true, "message" => "Game added successfully!"));
+        echo json_encode(array("success" => true, "message" => "Game successfully added to $group!"));
         exit;
     }
 }
