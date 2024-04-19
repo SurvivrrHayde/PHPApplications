@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- SOURCES USED: https://api.jquery.com/jQuery.post/ -->
     <!-- Include Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -11,6 +12,42 @@
     <meta name="description" content="Game Rank">
     <meta name="keywords" content="video games, games">
     <title>Game Rank Detail</title>
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            let addMessage = $("#addMessage");
+            addMessage.hide();
+            $(".addGameForm").submit(function (event) {
+                event.preventDefault();
+                let formData = $(this).serialize();
+                $.ajax({
+                    type: "POST",
+                    url: "?command=addGame",
+                    data: formData,
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.success) {
+                            if (addMessage.hasClass("alert-danger")) {
+                                addMessage.removeClass("alert-danger");
+                            }
+                            addMessage.addClass("alert-success");
+                        }
+                        else {
+                            if (addMessage.hasClass("alert-success")) {
+                                addMessage.removeClass("alert-success");
+                            }
+                            addMessage.addClass("alert-danger");
+                        }
+                        addMessage.text(response.message);
+                        addMessage.show();
+                    },
+                    error: function (response) {
+                        console.log(response);
+                    }
+                });
+            });
+        });
+    </script>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -87,6 +124,12 @@
 <?php include "navbar.php"; ?>
 <div class="container">
     <div class="row">
+        <div class="col-12">
+            <!-- JS Add Game success/failure message -->
+            <div id="addMessage" class="alert" role="alert"></div>
+        </div>
+    </div>
+    <div class="row">
         <div class="col-md-4">
             <div class="card h-100">
                 <?php
@@ -127,14 +170,38 @@
                     for ($i = 0; $i < count($platforms); $i++) {
                         if ($platform_logos[$i]) {
                             echo "<li class='list-group-item'>" . $platforms[$i] . "<img src='$platform_logos[$i]' alt='$platforms[$i] logo' class='console-logo'/>" . "</li>";
-                        }
-                        else {
-                            echo "<li class='list-group-item'>" . $platforms[$i]  . "</li>";
+                        } else {
+                            echo "<li class='list-group-item'>" . $platforms[$i] . "</li>";
                         }
                     }
                     ?>
                 </li>
             </ul>
+        </div>
+        <div class="col-md-2">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                        aria-expanded="false">
+                    Add Game to Group
+                </button>
+                <!-- TODO: Maybe have JS say if it's already been added to group? -->
+                <!-- TODO: if game already in group, handle it properly -->
+                <ul class="dropdown-menu">
+                    <?php if (isset($_SESSION["groups"]) && count($_SESSION["groups"]) > 0): ?>
+                        <?php foreach ($_SESSION["groups"] as $group): ?>
+                            <li>
+                                <form class="addGameForm">
+                                    <input type="hidden" name="groupName" value="<?= $group['name'] ?>">
+                                    <input type="hidden" name="gameId" value="<?= $_GET['id'] ?>">
+                                    <input type="hidden" name="gameName" value="<?= $name ?>">
+                                    <input type="hidden" name="gameImage" value="<?= $cover ?>">
+                                    <button type="submit"> <?= $group["name"] ?> </button>
+                                </form>
+                            </li>
+                        <?php endforeach ?>
+                    <?php endif ?>
+                </ul>
+            </div>
         </div>
     </div>
     <div class="row">
