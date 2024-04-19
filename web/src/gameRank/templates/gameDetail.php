@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <!-- SOURCES USED: https://api.jquery.com/jQuery.post/ -->
     <!-- Include Bootstrap -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
           integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
@@ -13,20 +14,34 @@
     <title>Game Rank Detail</title>
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <script>
-        $(document).ready(function() {
-            $("#addMessage").hide();
-            $(".addGameForm").submit(function(event) {
+        $(document).ready(function () {
+            let addMessage = $("#addMessage");
+            addMessage.hide();
+            $(".addGameForm").submit(function (event) {
                 event.preventDefault();
                 let formData = $(this).serialize();
                 $.ajax({
                     type: "POST",
                     url: "?command=addGame",
                     data: formData,
-                    success: function(response) {
-                        $("#addMessage").show();
-                        $("#addMessage").text("Game added successfully!");
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.success) {
+                            if (addMessage.hasClass("alert-danger")) {
+                                addMessage.removeClass("alert-danger");
+                            }
+                            addMessage.addClass("alert-success");
+                        }
+                        else {
+                            if (addMessage.hasClass("alert-success")) {
+                                addMessage.removeClass("alert-success");
+                            }
+                            addMessage.addClass("alert-danger");
+                        }
+                        addMessage.text(response.message);
+                        addMessage.show();
                     },
-                    error: function(response) {
+                    error: function (response) {
                         console.log(response);
                     }
                 });
@@ -111,7 +126,7 @@
     <div class="row">
         <div class="col-12">
             <!-- JS Add Game success/failure message -->
-            <div id="addMessage" class="alert alert-success" role="alert"></div>
+            <div id="addMessage" class="alert" role="alert"></div>
         </div>
     </div>
     <div class="row">
@@ -176,7 +191,7 @@
                         <?php foreach ($_SESSION["groups"] as $group): ?>
                             <li>
                                 <form class="addGameForm">
-                                    <input type="hidden" name="command" value="addGame">
+                                    <input type="hidden" name="command" value="addGame"> <!-- remove this -->
                                     <input type="hidden" name="groupName" value="<?= $group['name'] ?>">
                                     <input type="hidden" name="gameId" value="<?= $_GET['id'] ?>">
                                     <input type="hidden" name="gameName" value="<?= $name ?>">

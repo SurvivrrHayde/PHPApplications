@@ -368,7 +368,19 @@ class GameRankController {
         $gameID = $_POST["gameId"];
         $gameName = $_POST["gameName"];
         $gameImage = $_POST["gameImage"];
-        $this->db->query("INSERT INTO Games (gameid, name, cover) VALUES ($1, $2, $3)", $gameID, $gameName, $gameImage);
+        // Check if the game already exists in the Games table
+        $gameAlreadyExists = $this->db->query("SELECT COUNT(*) AS count FROM Games WHERE gameid = $1", $gameID);
+        $gameCount = $gameAlreadyExists[0]["count"];
+        if ($gameCount == 0) {
+            $this->db->query("INSERT INTO Games (gameid, name, cover) VALUES ($1, $2, $3)", $gameID, $gameName, $gameImage);
+        }
+        // Check if the game already exists in the group
+        $gameExistsInThisGroup = $this->db->query("SELECT COUNT(*) AS count FROM UserGameRankings WHERE groupid = (SELECT groupid FROM Groups WHERE name = $1) AND gameid = $2", $group, $gameID);
+        $existingCount = $gameExistsInThisGroup[0]["count"];
+        if ($existingCount > 0) {
+            echo json_encode(array("success" => false, "message" => "You've already added this game to $group!"));
+            exit;
+        }
         $groupID = $this->db->query("SELECT groupid AS groupid FROM Groups WHERE name = $1", $group);
         $groupID = $groupID[0]["groupid"];
         $nextRanking = $this->db->query("SELECT MAX(ranking) + 1 AS next_ranking FROM UserGameRankings WHERE groupid = $1", $groupID);
@@ -378,7 +390,8 @@ class GameRankController {
             $nextRanking = 1;
         }
         $this->db->query("INSERT INTO UserGameRankings (groupid, userid, gameid, ranking) VALUES ($1, $2, $3, $4)", $groupID, $userID, $gameID, $nextRanking);
-        header("Location: ?command=showRankGroup");
+        echo json_encode(array("success" => true, "message" => "Game added successfully!"));
+        exit;
     }
 }
 ?>
