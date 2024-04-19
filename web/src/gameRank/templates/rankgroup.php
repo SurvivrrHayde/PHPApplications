@@ -62,7 +62,34 @@
       </div>
   </div>
   <hr class="border">
-
+  <!-- TODO: SHOW ALL GAMES -->
+  <?php $rankings = $_SESSION["currentGroup"]["rankings"]; ?>
+  <?php if(isset($rankings)): ?>
+    <div class="card-group justify-content-start">
+    <?php foreach($rankings as $game): ?>
+      <?php
+      $name = $game["gamename"];
+      $rank = $game["ranking"];
+      $coverQuery = $this->db->query("SELECT cover FROM Games WHERE name = $1", $name);
+      $cover = $coverQuery[0]["cover"];
+      ?>
+    <div class="col">
+        <div class="card h-100">
+            <img
+                src="<?= $cover ?>"
+                class="card-img-top"
+                alt="<?= $name ?> cover"
+            >
+            <div class="card-body">
+                <h5 class="card-title">
+                    <?= $rank ?>. <?= $name ?>
+                </h5>
+            </div>
+        </div>
+    </div>
+    <?php endforeach ?>
+    </div>
+  <?php endif ?>
   <!-- Include Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
     integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
