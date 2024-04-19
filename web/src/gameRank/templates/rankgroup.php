@@ -99,6 +99,7 @@
   </div>
   <!-- Your Rankings -->
   <!-- TODO: make all cards float to the left, don't space them out automatically -->
+  <!-- TODO: Maybe use JS to see if final rankings are available -->
   <div class="row" style="justify-content: left">
       <div class="col-6">
           <h1>Your Rankings:</h1>
