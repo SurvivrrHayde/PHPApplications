@@ -369,16 +369,16 @@ class GameRankController {
         $gameName = $_POST["gameName"];
         $gameImage = $_POST["gameImage"];
         $this->db->query("INSERT INTO Games (gameid, name, cover) VALUES ($1, $2, $3)", $gameID, $gameName, $gameImage);
-//        $groupID = $this->db->query("SELECT groupid AS groupid FROM Groups WHERE name = $1", $group);
-//        $groupID = $groupID[0]["groupid"];
-//        $nextRanking = $this->db->query("SELECT COALESCE(MAX(ranking), 0) + 1 AS next_ranking FROM UserGameRankings WHERE groupid = $1", $groupID);
-//        $nextRanking = $nextRanking[0]["next_ranking"];
-//        $userID = $_SESSION["user"]["userId"]; // TODO: Ensure this works
-//        if (empty($nextRanking)) {
-//            $nextRanking = 1;
-//        }
-//        $this->db->query("INSERT INTO UserGameRankings (groupid, userid, gameid, ranking) VALUES ($1, $2, $3, $4)", $groupID, $userID, $gameID, $nextRanking);
-//        // Take user to group page
+        $groupID = $this->db->query("SELECT groupid AS groupid FROM Groups WHERE name = $1", $group);
+        $groupID = $groupID[0]["groupid"];
+        $nextRanking = $this->db->query("SELECT MAX(ranking) + 1 AS next_ranking FROM UserGameRankings WHERE groupid = $1", $groupID);
+        $nextRanking = $nextRanking[0]["next_ranking"];
+        $userID = $_SESSION["user"]["userId"];
+        if (empty($nextRanking)) {
+            $nextRanking = 1;
+        }
+        $this->db->query("INSERT INTO UserGameRankings (groupid, userid, gameid, ranking) VALUES ($1, $2, $3, $4)", $groupID, $userID, $gameID, $nextRanking);
+        // Take user to group page
         $_POST["groupName"] = $group;
         header("Location: ?command=groupClicked");
     }
