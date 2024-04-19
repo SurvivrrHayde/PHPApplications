@@ -129,12 +129,25 @@
                             echo "<li class='list-group-item'>" . $platforms[$i] . "<img src='$platform_logos[$i]' alt='$platforms[$i] logo' class='console-logo'/>" . "</li>";
                         }
                         else {
-                            echo "<li class='list-group-item'>" . $platforms[$i]  . "</li>";
+                            echo "<li class='list-group-item'>" . $platforms[$i] . "</li>";
                         }
                     }
                     ?>
                 </li>
             </ul>
+        </div>
+        <div class="col-md-2">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    Add Game to Group...
+                </button>
+                <ul class="dropdown-menu">
+                    <?php
+
+
+                    ?>
+                </ul>
+            </div>
         </div>
     </div>
     <div class="row">
