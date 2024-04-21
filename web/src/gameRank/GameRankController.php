@@ -23,6 +23,9 @@ class GameRankController {
             $command = $this->input["command"];
 
         switch ($command) {
+            case "saveOrder":
+                $this->handleSaveOrder();
+                break;
             case "returnGroupJson":
                 $this->handleJsonGroup();
                 break;
@@ -97,6 +100,24 @@ class GameRankController {
             default:
                 include("/opt/src/gameRank/templates/homePage.php");
                 break;
+        }
+    }
+
+    public function handleSaveOrder() {
+        error_log("hello");
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $userId = $_SESSION['user']['userId'];
+            $groupId = $_SESSION['currentGroup']['groupId'];
+            $data = json_decode(file_get_contents("php://input"), true);
+            $gameRankings = $data['order'];
+    
+            foreach ($gameRankings as $index => $gameId) {
+                $ranking = $index + 1;
+    
+                $res = $this->db->query("update UserGameRankings set ranking = $1 where groupId = $2 and userId = $3 and gameId = $4", $ranking, $groupId, $userId, $gameId);
+            }
+            echo json_encode(['status' => 'success']);
+            exit;
         }
     }
 

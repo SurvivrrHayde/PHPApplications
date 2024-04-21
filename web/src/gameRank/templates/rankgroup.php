@@ -129,7 +129,7 @@
       $gameidQuery = $this->db->query("SELECT gameid FROM Games WHERE name = $1", $name);
       $gameid = $gameidQuery[0]["gameid"];
       ?>
-    <div class="col">
+    <div class="col" id="<?= $gameid?>">
         <div class="card h-100">
             <img
                 src="<?= $cover ?>"
@@ -147,6 +147,7 @@
     <?php endforeach ?>
     </div>
   <?php endif ?>
+  <button id="saveOrder">Save Order</button>
   <!-- Include Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
     integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
@@ -154,6 +155,50 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
     integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
     crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+    <script>
+        var sortable;
+        document.addEventListener('DOMContentLoaded', (event) => {
+            var el = document.querySelector('.card-group');
+            sortable = Sortable.create(el, {
+                animation: 150,
+                ghostClass: 'blue-background-class',
+                dataIdAttr: 'id',
+                onEnd: function(evt) {
+                    var itemEl = evt.item;
+                }
+            });
+        });
+        document.getElementById('saveOrder').addEventListener('click', function() {
+            var order = sortable.toArray();
+            console.log(order);
+            fetch('?command=saveOrder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({order: order})
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                }
+                throw new Error('Network response was not ok.');
+            })
+            .then(data => {
+                console.log('Success:', data);
+                if (data.status === 'success') {
+                    window.location.reload();
+                } else {
+                    alert('Failed to save order: ' + data.message);
+                }
+            })
+            .catch((error) => {
+                console.error('Error:', error);
+            });
+        });
+
+</script>
 </body>
 
 </html>
