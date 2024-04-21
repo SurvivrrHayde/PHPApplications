@@ -102,8 +102,6 @@
             height: 25vh;
             object-fit: fill;
         }
-
-
     </style>
     <?php
     $gameID = $_GET["id"];

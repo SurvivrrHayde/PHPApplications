@@ -14,9 +14,6 @@
     <title>Game Rank Game Search</title>
     <link rel="stylesheet" href="styles\rankgroup.css">
     <style>
-        #page {
-        }
-
         #pagination-numbers {
             display: flex;
             flex-wrap: wrap;
