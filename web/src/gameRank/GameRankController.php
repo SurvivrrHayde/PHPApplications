@@ -97,6 +97,9 @@ class GameRankController {
             case "addGame":
                 $this->addGame();
                 break;
+            case "removeGame":
+                $this->removeGame();
+                break;
             default:
                 include("/opt/src/gameRank/templates/homePage.php");
                 break;
@@ -110,10 +113,10 @@ class GameRankController {
             $groupId = $_SESSION['currentGroup']['groupId'];
             $data = json_decode(file_get_contents("php://input"), true);
             $gameRankings = $data['order'];
-    
+
             foreach ($gameRankings as $index => $gameId) {
                 $ranking = $index + 1;
-    
+
                 $res = $this->db->query("update UserGameRankings set ranking = $1 where groupId = $2 and userId = $3 and gameId = $4", $ranking, $groupId, $userId, $gameId);
             }
             echo json_encode(['status' => 'success']);
@@ -270,7 +273,7 @@ class GameRankController {
         }
         include("/opt/src/gameRank/templates/signup.php");
     }
-  
+
     /**
      * Returns top 4 game search hits according to IGDB API
      */
@@ -412,6 +415,29 @@ class GameRankController {
         }
         $this->db->query("INSERT INTO UserGameRankings (groupid, userid, gameid, ranking) VALUES ($1, $2, $3, $4)", $groupID, $userID, $gameID, $nextRanking);
         echo json_encode(array("success" => true, "message" => "Game successfully added to $group!"));
+        exit;
+    }
+
+    public function removeGame() {
+        if (!isset($_POST["gameId"]) || !isset($_POST["groupId"]) || !isset($_POST["userId"]) || !isset($_POST["ranking"])) {
+            echo json_encode(array("success" => false, "message" => "One or more required parameters are not set."));
+            exit;
+        }
+        $gameId = (int)$_POST["gameId"];
+        $groupId = (int)$_POST["groupId"];
+        $userId = (int)$_POST["userId"];
+        $ranking = (int)$_POST["ranking"];
+        // decrement all games ranked higher than the game about to be deleted
+        $gamesToUpdate = $this->db->query("SELECT gameid FROM UserGameRankings WHERE groupid = $1 AND userid = $2 AND ranking > $3", $groupId, $userId, $ranking);
+        foreach ($gamesToUpdate as $game) {
+            $curId = $game["gameid"];
+            $rankingQuery = $this->db->query("SELECT ranking FROM UserGameRankings WHERE groupid = $1 AND userid = $2 AND gameid = $3", $groupId, $userId, $curId);
+            $rankingToBe = $rankingQuery[0]["ranking"] - 1;
+            $updateQuery = $this->db->query("UPDATE UserGameRankings SET ranking = $1 WHERE groupid = $2 AND userid = $3 AND gameid = $4", $rankingToBe, $groupId, $userId, $curId);
+        }
+        // remove game from rankings
+        $removeQuery = $this->db->query("DELETE FROM UserGameRankings WHERE gameid = $1 AND userid = $2 AND groupid = $3 AND ranking = $4", $gameId, $userId, $groupId, $ranking);
+        echo json_encode(array("success" => true, "message" => "Successfully removed game from ranking."));
         exit;
     }
 }
