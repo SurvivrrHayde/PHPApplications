@@ -207,11 +207,13 @@
             <h3> Screenshots </h3>
             <div class="row">
                 <?php
-                for ($i = 0; $i < count($screenshots); $i++) {
-                    if ($screenshots[$i]) {
-                        echo "<div class='col-md-4'>";
-                        echo "<img src='$screenshots[$i]' alt='$name screenshot' class='screenshot-img'/>";
-                        echo "</div>";
+                if ($screenshots) {
+                    for ($i = 0; $i < count($screenshots); $i++) {
+                        if ($screenshots[$i]) {
+                            echo "<div class='col-md-4'>";
+                            echo "<img src='$screenshots[$i]' alt='$name screenshot' class='screenshot-img'/>";
+                            echo "</div>";
+                        }
                     }
                 }
                 ?>

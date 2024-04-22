@@ -83,20 +83,20 @@ class GameGetter {
         $ret["name"] = $query[0]->name;
         $ret["summary"] = $query[0]->summary;
         $ret["cover"] = str_replace("t_thumb", "t_720p", $query[0]->cover->url);
-        $screenshots_from_query = $query[0]->screenshots;
+        $screenshots_from_query = $query[0]->screenshots ?? [];
         $screenshots = [];
         for ($i = 0; $i < count($screenshots_from_query); $i++) {
             $screenshots[] = str_replace("t_thumb", "t_720p", $screenshots_from_query[$i]->url);
         }
         $ret["screenshots"] = $screenshots;
         // Hard ones
-        $genres_from_query = $query[0]->genres;
+        $genres_from_query = $query[0]->genres ?? [];
         $genres = [];
         for ($i = 0; $i < count($genres_from_query); $i++) {
             $genres[] = $genres_from_query[$i]->name;
         }
         $ret["genres"] = $genres;
-        $involved_companies_query = $query[0]->involved_companies;
+        $involved_companies_query = $query[0]->involved_companies ?? [];
         // Finding developer
         for ($i = 0; $i < count($involved_companies_query); $i++) {
             if ($involved_companies_query[$i]->developer) {
@@ -108,7 +108,7 @@ class GameGetter {
         $ret["company"] = $company;
         $ret["company_logo"] = $company_logo;
         // Getting platforms
-        $platforms_query = $query[0]->platforms;
+        $platforms_query = $query[0]->platforms ?? [];
         $platforms = [];
         $platform_logos = [];
         for ($i = 0; $i < count($platforms_query); $i++) {

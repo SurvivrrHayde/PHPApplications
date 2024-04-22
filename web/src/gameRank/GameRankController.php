@@ -100,6 +100,9 @@ class GameRankController {
             case "removeGame":
                 $this->removeGame();
                 break;
+            case "showRankings":
+                $this->showRankings();
+                break;
             default:
                 include("/opt/src/gameRank/templates/homePage.php");
                 break;
@@ -441,8 +444,8 @@ class GameRankController {
         exit;
     }
 
-    public function generateFinalRankings() {
-
+    public function showRankings() {
+        
     }
 }
 ?>

@@ -122,6 +122,7 @@ https://www.w3schools.com/howto/howto_css_style_hr.asp , https://stackoverflow.c
 $deadline = $_SESSION['currentGroup']['deadline'];
 $deadlineDateTime = new DateTime($deadline);
 $currentDateTime = new DateTime();
+// var_dump($_SESSION);
 ?>
 <h3 class="d-flex justify-content-center">Deadline: <?= $deadline ?></h3>
 <?php if ($currentDateTime >= $deadlineDateTime): ?>
@@ -206,7 +207,9 @@ $currentDateTime = new DateTime();
         <?php endforeach ?>
     </div>
 <?php endif ?>
+<?php if ($currentDateTime < $deadlineDateTime): ?>
 <button id="saveOrder">Save Order</button>
+<?php endif ?>
 <!-- Include Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
@@ -215,6 +218,7 @@ $currentDateTime = new DateTime();
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<?php if ($currentDateTime < $deadlineDateTime): ?>
 <script>
     var sortable;
     document.addEventListener('DOMContentLoaded', (event) => {
@@ -256,8 +260,8 @@ $currentDateTime = new DateTime();
                 console.error('Error:', error);
             });
     });
-
 </script>
+<?php endif ?>
 </body>
 
 </html>

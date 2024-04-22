@@ -25,6 +25,8 @@
 <?php
 include "navbar.php";
 //$curPage = $_GET["page"];
+//error_reporting(E_ALL);
+//ini_set('display_errors', 1);
 // TODO: make this post instead
 if (!isset($_GET["searchText"])) {
     $_GET["searchText"] = $_POST["searchText"];
