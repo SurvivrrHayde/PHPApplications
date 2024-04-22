@@ -440,5 +440,9 @@ class GameRankController {
         echo json_encode(array("success" => true, "message" => "Successfully removed game from ranking."));
         exit;
     }
+
+    public function generateFinalRankings() {
+
+    }
 }
 ?>

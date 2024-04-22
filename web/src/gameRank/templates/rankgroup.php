@@ -118,13 +118,19 @@ https://www.w3schools.com/howto/howto_css_style_hr.asp , https://stackoverflow.c
 <!-- Users -->
 <h1 class="d-flex justify-content-center"><?= $_SESSION['currentGroup']['groupName'] ?>
     (<?= $_SESSION['currentGroup']['creatorName'] ?>'s Group)</h1>
-<h3 class="d-flex justify-content-center">Deadline: <?= $_SESSION['currentGroup']['deadline'] ?></h3>
+<?php
+$deadline = $_SESSION['currentGroup']['deadline'];
+$deadlineDateTime = new DateTime($deadline);
+$currentDateTime = new DateTime();
+?>
+<h3 class="d-flex justify-content-center">Deadline: <?= $deadline ?></h3>
+<?php if ($currentDateTime >= $deadlineDateTime): ?>
 <div class="d-flex justify-content-center">
-    <!-- TODO: Use JavaScript to check final deadline -->
     <a href="?command=showRankGroup" tabindex="0" class="btn btn-primary" role="button" id="shutup">
         View Final Rankings
     </a>
 </div>
+<?php endif ?>
 <hr class="border">
 <div class="row text-center">
     <h2>Users in this group:</h2>
