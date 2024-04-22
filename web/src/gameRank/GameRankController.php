@@ -408,6 +408,16 @@ class GameRankController {
             echo json_encode(array("success" => false, "message" => "You've already added this game to $group!"));
             exit;
         }
+        // Check if the deadline has passed
+        $deadlineQuery = $this->db->query("SELECT deadline FROM Groups WHERE name = $1", $group);
+        $deadline = $deadlineQuery[0]["deadline"];
+        $deadlineDateTime = new DateTime($deadline);
+        $currentDateTime = new DateTime();
+        if ($currentDateTime >= $deadlineDateTime) {
+            echo json_encode(array("success" => false, "message" => "The deadline for this group has passed!"));
+            exit;
+        }
+        // Proceed to add game
         $groupID = $this->db->query("SELECT groupid AS groupid FROM Groups WHERE name = $1", $group);
         $groupID = $groupID[0]["groupid"];
         $nextRanking = $this->db->query("SELECT MAX(ranking) + 1 AS next_ranking FROM UserGameRankings WHERE groupid = $1", $groupID);
@@ -445,7 +455,7 @@ class GameRankController {
     }
 
     public function showRankings() {
-        
+
     }
 }
 ?>

@@ -182,8 +182,6 @@
                         aria-expanded="false">
                     Add Game to Group
                 </button>
-                <!-- TODO: Maybe have JS say if it's already been added to group? -->
-                <!-- TODO: if game already in group, handle it properly -->
                 <ul class="dropdown-menu">
                     <?php if (isset($_SESSION["groups"]) && count($_SESSION["groups"]) > 0): ?>
                         <?php foreach ($_SESSION["groups"] as $group): ?>
