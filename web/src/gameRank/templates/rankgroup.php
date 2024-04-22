@@ -192,6 +192,7 @@ $currentDateTime = new DateTime();
                             <?= $rank ?>. <?= $name ?>
                         </h5>
                         <a style="color: #1c7cb8" href="/gamerank/?command=detail&id=<?= $gameid ?>"> Learn More </a>
+                        <?php if ($currentDateTime < $deadlineDateTime): ?>
                         <div>
                             <form class="removeGameForm">
                                 <input type="hidden" name="gameId" value="<?= $gameid ?>">
@@ -201,6 +202,7 @@ $currentDateTime = new DateTime();
                                 <button type="submit" class="btn btn-sm btn-danger removeGameButton"> Remove Game</button>
                             </form>
                         </div>
+                        <?php endif ?>
                     </div>
                 </div>
             </div>
