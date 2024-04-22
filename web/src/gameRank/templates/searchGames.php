@@ -21,22 +21,19 @@
     </style>
 </head>
 <body>
-<!-- TODO: For JS dynamic behavior, use AJAX to see if user already has a game in a group-->
+<!-- TODO: For JS dynamic behavior, use AJAX to see if user already has a game in a group, like a little icon or something-->
 <?php
 include "navbar.php";
-//$curPage = $_GET["page"];
-// TODO: make this post instead
 if (!isset($_GET["searchText"])) {
     $_GET["searchText"] = $_POST["searchText"];
 }
 $searchText = $_GET["searchText"];
-$searchResult = $this->gameGetter->searchForGamesAndCovers($searchText, $_GET["page"] * 16);
+$searchResult = $this->gameGetter->searchForGamesAndCovers($searchText, $_GET["page"] - 1);
 $numResults = count($searchResult);
 $overallResults = $this->gameGetter->getNumberOfSearchResults($searchText);
 echo "<h1> Got " . $overallResults . " Results </h1>";
 echo "<div class='card-group justify-content-start'>";
 for ($i = 0; $i < $numResults; $i++) {
-    // TODO: actually handle null query case
     if (!isset($searchResult[$i])) {
         continue;
     }
