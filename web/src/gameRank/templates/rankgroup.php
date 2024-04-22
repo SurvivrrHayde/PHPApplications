@@ -122,12 +122,15 @@ https://www.w3schools.com/howto/howto_css_style_hr.asp , https://stackoverflow.c
 $deadline = $_SESSION['currentGroup']['deadline'];
 $deadlineDateTime = new DateTime($deadline);
 $currentDateTime = new DateTime();
-// var_dump($_SESSION);
+// echo var_dump($_SESSION);
+//if (isset($_SESSION["testtest"])) {
+//    echo var_dump($_SESSION["testtest"]);
+//}
 ?>
 <h3 class="d-flex justify-content-center">Deadline: <?= $deadline ?></h3>
 <?php if ($currentDateTime >= $deadlineDateTime): ?>
 <div class="d-flex justify-content-center">
-    <a href="?command=showRankGroup" tabindex="0" class="btn btn-primary" role="button" id="shutup">
+    <a href="?command=showRankings" tabindex="0" class="btn btn-primary" role="button" id="shutup">
         View Final Rankings
     </a>
 </div>
