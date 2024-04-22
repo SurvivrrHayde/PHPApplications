@@ -26,30 +26,30 @@ class GameGetter {
         try {
             $query = $this->igdb->game(
                 $builder
-                ->fields("id, name, cover.*")
-                ->search($searchText)
-                ->limit($numGames)
-                ->offset($offset)
-                ->build()
+                    ->fields("id, name, cover.*")
+                    ->search($searchText)
+                    ->limit($numGames)
+                    ->offset($offset)
+                    ->build()
             );
         }
         catch (Exception $e) {
-            echo $e->getMessage();
+            echo "Error while querying IGDB: " . $e->getMessage();
+            return $ret;
         }
-        for ($i = 0; $i < $numGames; $i++) {
-            $item = $query[$i];
-            // null query result case
-            if (!$item) {
-                continue;
-            }
+        if (empty($query)) {
+            echo "No results found for '$searchText'";
+            return $ret;
+        }
+        foreach ($query as $item) {
             $toConcat = [];
             $toConcat[] = $item->id;
             $toConcat[] = $item->name;
+
             if (isset($item->cover) && is_object($item->cover)) {
                 $image_id = $item->cover->image_id;
                 $url = IGDBUtils::image_url($image_id, "720p");
-            }
-            else {
+            } else {
                 $url = "";
             }
             $toConcat[] = $url;
@@ -57,6 +57,7 @@ class GameGetter {
         }
         return $ret;
     }
+
 
 
     /**
