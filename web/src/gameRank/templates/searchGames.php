@@ -65,7 +65,7 @@ if (!isset($_GET["searchText"])) {
     $_GET["searchText"] = $_POST["searchText"];
 }
 $searchText = $_GET["searchText"];
-$searchResult = $this->gameGetter->searchForGamesAndCovers($searchText, $_GET["page"] - 1);
+$searchResult = $this->gameGetter->searchForGamesAndCovers($searchText, ($_GET["page"] - 1) * 16);
 $_SESSION["searchResult"] = $searchResult;
 $numResults = count($searchResult);
 $overallResults = $this->gameGetter->getNumberOfSearchResults($searchText);
