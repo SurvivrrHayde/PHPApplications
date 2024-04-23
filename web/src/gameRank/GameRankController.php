@@ -106,6 +106,9 @@ class GameRankController {
             case "showRankings":
                 $this->showRankings();
                 break;
+            case "getGameGroupsSearch":
+                $this->getGameGroupsSearch();
+                break;
             default:
                 include("/opt/src/gameRank/templates/homePage.php");
                 break;
@@ -519,5 +522,40 @@ class GameRankController {
             return 0;
         }
     }
+    public function getGameGroupsSearch() {
+        $userID = $_SESSION["user"]["userId"];
+        if (!$userID) {
+            echo json_encode(array("success" => false, "message" => "You aren't logged in!", "matches" => []));
+            exit;
+        }
+        $searchResult = $_SESSION["searchResult"];
+        if (!$searchResult) {
+            echo json_encode(array("success" => false, "message" => "Got no results!", "matches" => []));
+            exit;
+        }
+        $groupNames = [];
+        foreach ($_SESSION["groups"] as $group) {
+            $groupNames[] = $group["name"];
+        }
+        if (!$groupNames) {
+            echo json_encode(array("success" => false, "message" => "You aren't in any groups!", "matches" => []));
+            exit;
+        }
+        $matches = [];
+        foreach ($searchResult as $res) {
+            $curGameId = $res[0];
+            $groupsQuery = $this->db->query("SELECT groupid FROM UserGameRankings WHERE userid = $1 AND gameid = $2", $userID, $curGameId)[0];
+            foreach ($groupsQuery as $gq) {
+                $curGroupId = $gq;
+                $curGroupName = $this->db->query("SELECT name FROM Groups WHERE groupid = $1", $curGroupId)[0]["name"];
+                $curRanking = $this->db->query("SELECT ranking FROM UserGameRankings WHERE gameid = $1 AND groupid = $2 AND userid = $3", $curGameId, $curGroupId, $userID)[0]["ranking"];
+                $matches[$curGameId] = array($curGroupName => $curRanking);
+            }
+        }
+        $numResults = count($matches);
+        echo json_encode(array("success" => true, "message" => "Got $numResults matches!", "matches" => $matches));
+        exit;
+    }
+
 }
 ?>
