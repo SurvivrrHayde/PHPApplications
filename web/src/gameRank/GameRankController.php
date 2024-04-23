@@ -38,6 +38,9 @@ class GameRankController {
             case "showRankGroup":
                 $this->showRankGroup();
                 break;
+            case "showFinalRankings":
+                $this->showFinalRankings();
+                break;
             case "login":
                 if(isset($_SESSION['user'])) {
                     $this->showHomePage();
@@ -99,6 +102,9 @@ class GameRankController {
                 break;
             case "removeGame":
                 $this->removeGame();
+                break;
+            case "showRankings":
+                $this->showRankings();
                 break;
             default:
                 include("/opt/src/gameRank/templates/homePage.php");
@@ -388,6 +394,7 @@ class GameRankController {
     }
 
     public function addGame() {
+        $userID = $_SESSION["user"]["userId"];
         $group = $_POST["groupName"];
         $gameID = $_POST["gameId"];
         $gameName = $_POST["gameName"];
@@ -399,17 +406,26 @@ class GameRankController {
             $this->db->query("INSERT INTO Games (gameid, name, cover) VALUES ($1, $2, $3)", $gameID, $gameName, $gameImage);
         }
         // Check if the game already exists in the group
-        $gameExistsInThisGroup = $this->db->query("SELECT COUNT(*) AS count FROM UserGameRankings WHERE groupid = (SELECT groupid FROM Groups WHERE name = $1) AND gameid = $2", $group, $gameID);
+        $gameExistsInThisGroup = $this->db->query("SELECT COUNT(*) AS count FROM UserGameRankings WHERE groupid = (SELECT groupid FROM Groups WHERE name = $1) AND gameid = $2 AND userid = $3", $group, $gameID, $userID);
         $existingCount = $gameExistsInThisGroup[0]["count"];
         if ($existingCount > 0) {
             echo json_encode(array("success" => false, "message" => "You've already added this game to $group!"));
             exit;
         }
+        // Check if the deadline has passed
+        $deadlineQuery = $this->db->query("SELECT deadline FROM Groups WHERE name = $1", $group);
+        $deadline = $deadlineQuery[0]["deadline"];
+        $deadlineDateTime = new DateTime($deadline);
+        $currentDateTime = new DateTime();
+        if ($currentDateTime >= $deadlineDateTime) {
+            echo json_encode(array("success" => false, "message" => "The deadline for this group has passed!"));
+            exit;
+        }
+        // Proceed to add game
         $groupID = $this->db->query("SELECT groupid AS groupid FROM Groups WHERE name = $1", $group);
         $groupID = $groupID[0]["groupid"];
         $nextRanking = $this->db->query("SELECT MAX(ranking) + 1 AS next_ranking FROM UserGameRankings WHERE groupid = $1", $groupID);
         $nextRanking = $nextRanking[0]["next_ranking"];
-        $userID = $_SESSION["user"]["userId"];
         if (empty($nextRanking)) {
             $nextRanking = 1;
         }
@@ -439,6 +455,69 @@ class GameRankController {
         $removeQuery = $this->db->query("DELETE FROM UserGameRankings WHERE gameid = $1 AND userid = $2 AND groupid = $3 AND ranking = $4", $gameId, $userId, $groupId, $ranking);
         echo json_encode(array("success" => true, "message" => "Successfully removed game from ranking."));
         exit;
+    }
+
+    public function showRankings() {
+        if (!isset($_SESSION["currentGroup"]["groupId"]))  {
+            echo json_encode(array("success" => false, "message" => "Unable to find group."));
+            exit;
+        }
+        $groupId = $_SESSION["currentGroup"]["groupId"];
+        $ranking = []; // In form of "gameid" => (int) points
+        // Get all rankings in the group
+        $rankingQuery = $this->db->query("SELECT * FROM UserGameRankings WHERE groupid = $1", $groupId);
+        // TODO: Specify that users can submit up to 40 games (?)
+        foreach ($rankingQuery as $rank) {
+            $curGame = $rank["gameid"];
+            $curRank = $rank["ranking"];
+            if (array_key_exists($curGame, $ranking)) {
+                $ranking[$curGame] += $this->convertRankingToPoints($curRank);
+            }
+            else {
+                $ranking[$curGame] = $this->convertRankingToPoints($curRank);
+            }
+        }
+        arsort($ranking); // Sort an associative array in descending order while preserving keys
+        $_SESSION["finalRankings"] = $ranking;
+        header("Location: ?command=showFinalRankings");
+    }
+
+    public function showFinalRankings() {
+        include("/opt/src/gameRank/templates/rankings.php");
+    }
+
+    public function convertRankingToPoints($ranking): int {
+        $ranking = (int) $ranking;
+        if ($ranking == 1) {
+            return 18;
+        }
+        else if ($ranking == 2 || $ranking == 3) {
+            return 17;
+        }
+        else if ($ranking == 4 || $ranking == 5) {
+            return 16;
+        }
+        else if ($ranking >= 6 && $ranking <= 10) {
+            return 15;
+        }
+        else if ($ranking >= 11 && $ranking <= 15) {
+            return 14;
+        }
+        else if ($ranking >= 16 && $ranking <= 20) {
+            return 13;
+        }
+        else if ($ranking >= 21 && $ranking <= 25) {
+            return 12;
+        }
+        else if ($ranking >= 26 && $ranking <= 30) {
+            return 11;
+        }
+        else if ($ranking >= 31 && $ranking <= 40) {
+            return 10;
+        }
+        else {
+            return 0;
+        }
     }
 }
 ?>

@@ -182,8 +182,6 @@
                         aria-expanded="false">
                     Add Game to Group
                 </button>
-                <!-- TODO: Maybe have JS say if it's already been added to group? -->
-                <!-- TODO: if game already in group, handle it properly -->
                 <ul class="dropdown-menu">
                     <?php if (isset($_SESSION["groups"]) && count($_SESSION["groups"]) > 0): ?>
                         <?php foreach ($_SESSION["groups"] as $group): ?>
@@ -207,11 +205,13 @@
             <h3> Screenshots </h3>
             <div class="row">
                 <?php
-                for ($i = 0; $i < count($screenshots); $i++) {
-                    if ($screenshots[$i]) {
-                        echo "<div class='col-md-4'>";
-                        echo "<img src='$screenshots[$i]' alt='$name screenshot' class='screenshot-img'/>";
-                        echo "</div>";
+                if ($screenshots) {
+                    for ($i = 0; $i < count($screenshots); $i++) {
+                        if ($screenshots[$i]) {
+                            echo "<div class='col-md-4'>";
+                            echo "<img src='$screenshots[$i]' alt='$name screenshot' class='screenshot-img'/>";
+                            echo "</div>";
+                        }
                     }
                 }
                 ?>

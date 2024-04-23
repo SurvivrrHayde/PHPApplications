@@ -118,13 +118,19 @@ https://www.w3schools.com/howto/howto_css_style_hr.asp , https://stackoverflow.c
 <!-- Users -->
 <h1 class="d-flex justify-content-center"><?= $_SESSION['currentGroup']['groupName'] ?>
     (<?= $_SESSION['currentGroup']['creatorName'] ?>'s Group)</h1>
-<h3 class="d-flex justify-content-center">Deadline: <?= $_SESSION['currentGroup']['deadline'] ?></h3>
+<?php
+$deadline = $_SESSION['currentGroup']['deadline'];
+$deadlineDateTime = new DateTime($deadline);
+$currentDateTime = new DateTime();
+?>
+<h3 class="d-flex justify-content-center">Deadline: <?= $deadline ?></h3>
+<?php if ($currentDateTime >= $deadlineDateTime): ?>
 <div class="d-flex justify-content-center">
-    <!-- TODO: Use JavaScript to check final deadline -->
-    <a href="?command=showRankGroup" tabindex="0" class="btn btn-primary" role="button" id="shutup">
+    <a href="?command=showRankings" tabindex="0" class="btn btn-primary" role="button" id="shutup">
         View Final Rankings
     </a>
 </div>
+<?php endif ?>
 <hr class="border">
 <div class="row text-center">
     <h2>Users in this group:</h2>
@@ -185,6 +191,7 @@ https://www.w3schools.com/howto/howto_css_style_hr.asp , https://stackoverflow.c
                             <?= $rank ?>. <?= $name ?>
                         </h5>
                         <a style="color: #1c7cb8" href="/gamerank/?command=detail&id=<?= $gameid ?>"> Learn More </a>
+                        <?php if ($currentDateTime < $deadlineDateTime): ?>
                         <div>
                             <form class="removeGameForm">
                                 <input type="hidden" name="gameId" value="<?= $gameid ?>">
@@ -194,13 +201,16 @@ https://www.w3schools.com/howto/howto_css_style_hr.asp , https://stackoverflow.c
                                 <button type="submit" class="btn btn-sm btn-danger removeGameButton"> Remove Game</button>
                             </form>
                         </div>
+                        <?php endif ?>
                     </div>
                 </div>
             </div>
         <?php endforeach ?>
     </div>
 <?php endif ?>
+<?php if ($currentDateTime < $deadlineDateTime): ?>
 <button id="saveOrder">Save Order</button>
+<?php endif ?>
 <!-- Include Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
         integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r"
@@ -209,6 +219,7 @@ https://www.w3schools.com/howto/howto_css_style_hr.asp , https://stackoverflow.c
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@latest/Sortable.min.js"></script>
+<?php if ($currentDateTime < $deadlineDateTime): ?>
 <script>
     var sortable;
     document.addEventListener('DOMContentLoaded', (event) => {
@@ -250,8 +261,8 @@ https://www.w3schools.com/howto/howto_css_style_hr.asp , https://stackoverflow.c
                 console.error('Error:', error);
             });
     });
-
 </script>
+<?php endif ?>
 </body>
 
 </html>

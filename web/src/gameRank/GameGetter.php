@@ -20,36 +20,36 @@ class GameGetter {
      * Returns the top $numGames games and covers as an array in the form:
      * [id, name, coverURL]
      */
-    public function searchForGamesAndCovers($searchText, $offset = 0, $numGames = 16): array {
+    public function searchForGamesAndCovers($searchText, $offset = 0): array {
         $ret = [];
         $builder = new IGDBQueryBuilder();
         try {
             $query = $this->igdb->game(
                 $builder
-                ->fields("id, name, cover.*")
-                ->search($searchText)
-                ->limit($numGames)
-                ->offset($offset)
-                ->build()
+                    ->fields("id, name, cover.*")
+                    ->search($searchText)
+                    ->limit(16)
+                    ->offset($offset)
+                    ->build()
             );
         }
         catch (Exception $e) {
-            echo $e->getMessage();
+            echo "Error while querying IGDB: " . $e->getMessage();
+            return $ret;
         }
-        for ($i = 0; $i < $numGames; $i++) {
-            $item = $query[$i];
-            // null query result case
-            if (!$item) {
-                continue;
-            }
+        if (empty($query)) {
+            echo "No results found for '$searchText'";
+            return $ret;
+        }
+        foreach ($query as $item) {
             $toConcat = [];
             $toConcat[] = $item->id;
             $toConcat[] = $item->name;
+
             if (isset($item->cover) && is_object($item->cover)) {
                 $image_id = $item->cover->image_id;
                 $url = IGDBUtils::image_url($image_id, "720p");
-            }
-            else {
+            } else {
                 $url = "";
             }
             $toConcat[] = $url;
@@ -57,6 +57,7 @@ class GameGetter {
         }
         return $ret;
     }
+
 
 
     /**
@@ -83,20 +84,20 @@ class GameGetter {
         $ret["name"] = $query[0]->name;
         $ret["summary"] = $query[0]->summary;
         $ret["cover"] = str_replace("t_thumb", "t_720p", $query[0]->cover->url);
-        $screenshots_from_query = $query[0]->screenshots;
+        $screenshots_from_query = $query[0]->screenshots ?? [];
         $screenshots = [];
         for ($i = 0; $i < count($screenshots_from_query); $i++) {
             $screenshots[] = str_replace("t_thumb", "t_720p", $screenshots_from_query[$i]->url);
         }
         $ret["screenshots"] = $screenshots;
         // Hard ones
-        $genres_from_query = $query[0]->genres;
+        $genres_from_query = $query[0]->genres ?? [];
         $genres = [];
         for ($i = 0; $i < count($genres_from_query); $i++) {
             $genres[] = $genres_from_query[$i]->name;
         }
         $ret["genres"] = $genres;
-        $involved_companies_query = $query[0]->involved_companies;
+        $involved_companies_query = $query[0]->involved_companies ?? [];
         // Finding developer
         for ($i = 0; $i < count($involved_companies_query); $i++) {
             if ($involved_companies_query[$i]->developer) {
@@ -108,7 +109,7 @@ class GameGetter {
         $ret["company"] = $company;
         $ret["company_logo"] = $company_logo;
         // Getting platforms
-        $platforms_query = $query[0]->platforms;
+        $platforms_query = $query[0]->platforms ?? [];
         $platforms = [];
         $platform_logos = [];
         for ($i = 0; $i < count($platforms_query); $i++) {
