@@ -13,26 +13,55 @@
     <meta name="keywords" content="video games, games">
     <title>Game Rank Game Search</title>
     <link rel="stylesheet" href="styles\rankgroup.css">
+    <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
     <style>
         #pagination-numbers {
             display: flex;
             flex-wrap: wrap;
         }
     </style>
+    <script>
+        $(document).ready(() => {
+            let checkButton = $("#checkButton");
+            $(".showGameGroups").submit(function(event) {
+                event.preventDefault();
+                let formData = $(this).serialize();
+                $.ajax({
+                    type: "POST",
+                    url: "?command=getGameGroupsSearch",
+                    data: formData,
+                    dataType: "json",
+                    success: function (response) {
+                        if (response.success) {
+                            console.log(response);
+                        }
+                        checkButton.text(response.message);
+                        setTimeout(() => {
+                            checkButton.text("Show Games in Groups");
+                        }, 2000);
+                    },
+                    error: (response) => {
+                        console.log(response);
+                    }
+                });
+            });
+        });
+    </script>
 </head>
 <body>
 <!-- TODO: For JS dynamic behavior, use AJAX to see if user already has a game in a group, like a little icon or something-->
+<?php include "navbar.php"; ?>
 <?php
-include "navbar.php";
 if (!isset($_GET["searchText"])) {
     $_GET["searchText"] = $_POST["searchText"];
 }
 $searchText = $_GET["searchText"];
 $searchResult = $this->gameGetter->searchForGamesAndCovers($searchText, $_GET["page"] - 1);
+$_SESSION["searchResult"] = $searchResult;
 $numResults = count($searchResult);
 $overallResults = $this->gameGetter->getNumberOfSearchResults($searchText);
 echo "<h1> Got " . $overallResults . " Results </h1>";
-echo "<div class='card-group justify-content-start'>";
+echo "<div class='card-group justify-content-start gameGroup'>";
 for ($i = 0; $i < $numResults; $i++) {
     if (!isset($searchResult[$i])) {
         continue;
@@ -41,7 +70,7 @@ for ($i = 0; $i < $numResults; $i++) {
     $game_id = $searchResult[$i][0];
     $img_src = $searchResult[$i][2];
     echo "<div class='col'>";
-        echo "<div class='card h-100'>";
+        echo "<div class='card h-100' id='$game_id'>";
         if ($img_src) {
             echo "<a href='/gamerank/?command=detail&id=$game_id'>";
             echo "<img alt='$game_name Cover' src='$img_src' class='card-img-top'/>";
@@ -55,6 +84,14 @@ for ($i = 0; $i < $numResults; $i++) {
 echo "</div>";
 $pages = intdiv($overallResults, 16);
 ?>
+<div class="row">
+    <div class="col-12 text-lg-center">
+        <form class="showGameGroups">
+            <input type="hidden" name="searchResult" value="<?= $searchResult ?>">
+            <button type="submit" id="checkButton" class="btn btn-primary"> Show Games in Groups </button>
+        </form>
+    </div>
+</div>
 <nav aria-label="..." id="page">
     <ul class="pagination pagination-lg" id="pagination-numbers">
         <?php
@@ -70,7 +107,6 @@ $pages = intdiv($overallResults, 16);
         ?>
     </ul>
 </nav>
-
 
 <!-- Include Bootstrap JS -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"

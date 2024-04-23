@@ -62,7 +62,7 @@ https://www.w3schools.com/howto/howto_css_style_hr.asp, https://developer.mozill
 <body>
 <!-- Navbar -->
 <?php include "/opt/src/gameRank/templates/navbar.php"; ?>
-<div class="row justify-content-end">
+<div class="row">
     <div class="col-md-9"></div>
     <div class="col-md-3">
         <div class="dropdown">
