@@ -33,7 +33,17 @@
                     dataType: "json",
                     success: function (response) {
                         if (response.success) {
-                            console.log(response);
+                            for (let gameId in response.matches) {
+                                for (let groupName in response.matches[gameId]) {
+                                    let ranking = response.matches[gameId][groupName];
+                                    // console.log(gameId, groupName, ranking);
+                                    let paraBuild = ranking + ". " + groupName;
+                                    let idSelector = "#"+gameId;
+                                    let toAdd = $("<p>").text(paraBuild);
+                                    $(idSelector).append(toAdd);
+                                    checkButton.addClass("disabled");
+                                }
+                            }
                         }
                         checkButton.text(response.message);
                         setTimeout(() => {
@@ -49,7 +59,6 @@
     </script>
 </head>
 <body>
-<!-- TODO: For JS dynamic behavior, use AJAX to see if user already has a game in a group, like a little icon or something-->
 <?php include "navbar.php"; ?>
 <?php
 if (!isset($_GET["searchText"])) {
@@ -70,13 +79,13 @@ for ($i = 0; $i < $numResults; $i++) {
     $game_id = $searchResult[$i][0];
     $img_src = $searchResult[$i][2];
     echo "<div class='col'>";
-        echo "<div class='card h-100' id='$game_id'>";
+        echo "<div class='card h-100'>";
         if ($img_src) {
             echo "<a href='/gamerank/?command=detail&id=$game_id'>";
             echo "<img alt='$game_name Cover' src='$img_src' class='card-img-top'/>";
             echo "</a>";
         }
-        echo "<div class='card-body'>";
+        echo "<div class='card-body' id='$game_id'>";
             echo "<h5 class='card-title'> $game_name </h5>";
             echo "<a href='/gamerank/?command=detail&id=$game_id'> Details </a>";
         echo "</div> </div> </div>";
