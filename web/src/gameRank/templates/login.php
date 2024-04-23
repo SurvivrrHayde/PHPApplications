@@ -28,7 +28,7 @@
         <h3 class="login-header text-center">Sign In</h3>
         <div class="card">
           <div class="card-body">
-            <form id="login-form" method="post" action="?command=login">
+            <form id="login-form" method="post" action="?command=login" onsubmit="return validateForm()">
               <div class="mb-3">
                 <label for="inputUsername" class="form-label white">Username</label>
                 <input type="text" class="form-control" id="inputUsername" name="userName" autofocus>
@@ -40,6 +40,7 @@
               <div class="d-grid mb-2">
                 <button class="btn btn-primary mt-1" type="submit">Sign in</button>
               </div>
+              <div id="error-message" style="color: red;"></div>
             </form>
             <?= $message ?>
           </div>
@@ -63,6 +64,24 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
     integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
     crossorigin="anonymous"></script>
+    <script>
+    function validateForm() {
+      var userName = document.getElementById("inputUsername").value;
+      var password = document.getElementById("inputPassword").value;
+      var formData = {
+        userName: userName,
+        password: password,
+      };
+
+      if (userName.trim() === "" || password.trim() === ""){
+        document.getElementById("error-message").textContent = "Please fill out all the fields.";
+        return false;
+      }
+
+      document.getElementById("error-message").textContent = "";
+      return true;
+    }
+  </script>
 </body>
 
 </html>

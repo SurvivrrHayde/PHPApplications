@@ -131,7 +131,7 @@ class GameRankController {
     }
 
     public function handleLogin() {
-        if (isset($_POST['userName']) && isset($_POST['password']) && !empty($_POST['userName']) && !empty($_POST['password'])) {
+        if (isset($_POST['userName']) && isset($_POST['password'])) {
             $userName = $_POST['userName'];
             $password = $_POST['password'];
 
@@ -159,7 +159,6 @@ class GameRankController {
                 }
             }
         }
-        $this->errorMessage = "Error logging in - Username and Password is required";
         $this->showLogin();
     }
 
@@ -176,29 +175,12 @@ class GameRankController {
     }
 
     public function handleSignup() {
-        if (isset($_POST['firstName']) && isset($_POST['lastName']) && isset($_POST['userName']) && isset($_POST['email']) && isset($_POST['password']) && isset($_POST['confirmPassword']) && !empty($_POST['firstName']) && !empty($_POST['lastName'])&& !empty($_POST['userName'])&& !empty($_POST['email'])&& !empty($_POST['password'])&& !empty($_POST['confirmPassword'])) {
+        if (isset($_POST['firstName']) && isset($_POST['lastName']) && isset($_POST['userName']) && isset($_POST['email']) && isset($_POST['password']) && isset($_POST['confirmPassword'])) {
             $firstName = $_POST['firstName'];
             $lastName = $_POST['lastName'];
             $userName = $_POST['userName'];
             $email = $_POST['email'];
             $password = $_POST['password'];
-            $confirmPassword = $_POST['confirmPassword'];
-
-            if (!$this->verifyEmail($email)) {
-                $this->errorMessage = "Email is not valid.";
-                $this->showSignup();
-                return;
-            }
-            if (!$this->verifyPassword($password)) {
-                $this->errorMessage = "Password must contain at least one symbol, capital letter, and number";
-                $this->showSignup();
-                return;
-            }
-            if (!$this->confirmPasswordMatches($password, $confirmPassword)) {
-                $this->errorMessage = "Passwords do not match.";
-                $this->showSignup();
-                return;
-            }
 
             $res = $this->db->query("select * from users where userName = $1;", $userName);
 
@@ -221,7 +203,6 @@ class GameRankController {
                 return;
             }
         }
-        $this->errorMessage = "Error signing up - not all fields filled out.";
         $this->showSignup();
     }
 
