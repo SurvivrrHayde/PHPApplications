@@ -466,12 +466,9 @@ class GameRankController {
         $ranking = []; // In form of "gameid" => (int) points
         // Get all rankings in the group
         $rankingQuery = $this->db->query("SELECT * FROM UserGameRankings WHERE groupid = $1", $groupId);
-        $rankingQueryCount = count($rankingQuery);
-        $_SESSION["testtest"] = $rankingQuery; // for debug
         // TODO: Specify that users can submit up to 40 games (?)
         foreach ($rankingQuery as $rank) {
             $curGame = $rank["gameid"];
-            $curUser = $rank["userid"];
             $curRank = $rank["ranking"];
             if (array_key_exists($curGame, $ranking)) {
                 $ranking[$curGame] += $this->convertRankingToPoints($curRank);
@@ -480,8 +477,9 @@ class GameRankController {
                 $ranking[$curGame] = $this->convertRankingToPoints($curRank);
             }
         }
-        $_SESSION["testtest"] = $ranking;
-        header("Location: ?command=showRankGroup");
+        arsort($ranking); // Sort an associative array in descending order while preserving keys
+        $_SESSION["finalRankings"] = $ranking;
+        header("Location: ?command=showFinalRankings");
     }
 
     public function showFinalRankings() {

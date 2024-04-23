@@ -122,10 +122,6 @@ https://www.w3schools.com/howto/howto_css_style_hr.asp , https://stackoverflow.c
 $deadline = $_SESSION['currentGroup']['deadline'];
 $deadlineDateTime = new DateTime($deadline);
 $currentDateTime = new DateTime();
-// echo var_dump($_SESSION);
-//if (isset($_SESSION["testtest"])) {
-//    echo var_dump($_SESSION["testtest"]);
-//}
 ?>
 <h3 class="d-flex justify-content-center">Deadline: <?= $deadline ?></h3>
 <?php if ($currentDateTime >= $deadlineDateTime): ?>

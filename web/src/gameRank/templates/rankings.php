@@ -15,315 +15,91 @@
   <meta name="description" content="Game Rank">
   <meta name="keywords" content="video games, games">
   <title>Game Rank</title>
+    <style>
+        .card-img-top {
+            width: 100%;
+            height: 25vh;
+            object-fit: cover;
+        }
+
+        .card-group {
+            justify-content: start;
+            margin-bottom: 20px;
+            margin-left: 25px;
+            margin-top: 10px;
+        }
+
+        .col {
+            flex: 0 0 auto;
+            width: auto;
+        }
+
+        .card {
+            background-color: #333;
+            color: #fff;
+            height: 400px;
+            width: 200px;
+        }
+
+    </style>
 </head>
 
 <body>
   <!-- Navbar -->
   <?php include "/opt/src/gameRank/templates/navbar.php"; ?>
+  <?php
+  // TODO: Null checking on these values
+  error_reporting(E_ALL);
+  ini_set("display_errors", 1);
+  $groupName = $_SESSION["currentGroup"]["groupName"];
+  $groupId = $_SESSION["currentGroup"]["groupId"];
+  $finalRankings = $_SESSION["finalRankings"];
+  $iterator = 1;
+  ?>
   <div class="d-flex justify-content-left">
     <a tabindex="0" class="btn btn-primary" href="?command=showRankGroup" role="button">
       Back to Group
     </a>
   </div>
   <div class="top-headers">
-    <h1>Without further ado... here are Alex's Group's favorite games!</h1>
-    <h1>Top 10</h1>
+    <h1>Without further ado... here are the favorite games of <?= $groupName ?>!</h1>
   </div>
-  <div class="container">
-    <div class="row">
-      <div class="col-md-8">
-        <!-- TODO: MAKE IT SO THAT ON BIG ENOUGH DISPLAYS, VOTERS ARE TO THE RIGHT. ON MOBILE THEY ARE BELOW. S-->
-        <div class="card mb-3" style="max-width: 540px">
-          <div class="row g-0">
-            <div class="col-md-4">
-              <img src="images/minecraft.jpg" class="img-fluid rounded-start" alt="Minecraft cover">
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5 class="card-title">1. Minecraft</h5>
-                <p class="card-text">2011, Mojang Studios</p>
-                <div class="col-md-5">
-                  <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/drhouse.png" alt="User1" class="rounded-circle"
-                        style="width: 40px; height: 40px">
-                      Alex: #1
-                    </li>
-                    <!-- TODO: #1 colored gold, #2 silver, #3 bronze -->
-                    <li class="list-group-item d-flex justify-content-between align-items-center ishmael">
-                      <img src="images/mario.png" alt="User2" class="rounded-circle" style="width: 40px; height: 40px">
-                      Ishmael: #1
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/dodo.png" alt="User2" class="rounded-circle" style="width: 40px; height: 40px">
-                      Vivian: #9
-                    </li>
-                  </ul>
+  <div class="card-group justify-content-start">
+    <?php foreach($finalRankings as $gameId => $points): ?>
+        <?php
+        $curCoverQuery = $this->db->query("SELECT cover FROM Games WHERE gameid = $1", $gameId);
+        $curCover = $curCoverQuery[0]["cover"];
+        $curGameNameQuery = $this->db->query("SELECT name FROM Games WHERE gameid = $1", $gameId);
+        $curGameName = $curGameNameQuery[0]["name"];
+        $curRanking = $iterator;
+        $iterator++;
+        $usersThatVotedForQuery = $this->db->query("SELECT userid FROM UserGameRankings WHERE gameid = $1 AND groupid = $2", $gameId, $groupId);
+        $userIds = [];
+        for ($i = 0; $i < count($usersThatVotedForQuery); $i++) {
+            $userIds[] = $usersThatVotedForQuery[$i]["userid"];
+        }
+        ?>
+        <div class="col">
+            <div class="card h-100 rankCard">
+                <img alt="<?= $curGameName ?> cover" class="card-img-top" src="<?= $curCover ?>">
+                <div class="card-body">
+                    <h5 class="card-title"> <?= $curRanking ?>. <?= $curGameName ?> </h5>
+                    <?php foreach($userIds as $curUserId): ?>
+                        <?php
+                        $username = $this->db->query("SELECT username FROM Users WHERE userid = $1", $curUserId)[0]["username"];
+                        $usersRanking = $this->db->query("SELECT ranking FROM UserGameRankings WHERE userid = $1 AND groupid = $2 AND gameid = $3", $curUserId, $groupId, $gameId)[0]["ranking"];
+                        ?>
+                        <div class="whoRanked">
+                            <p class="card-text">
+                                <?= $username ?>: #<?= $usersRanking ?>
+                            </p>
+                        </div>
+                    <?php endforeach; ?>
+                    <a style="color: #1c7cb8" href="/gamerank/?command=detail&id=<?= $gameId ?>"> Learn More </a>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-        <div class="card mb-3" style="max-width: 540px">
-          <div class="row g-0">
-            <div class="col-md-4">
-              <img src="images/mother3.jpg" class="img-fluid rounded-start" alt="Minecraft cover">
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5 class="card-title">2. Mother 3</h5>
-                <p class="card-text">2006, Nintendo</p>
-                <div class="col-md-5">
-                  <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/isabelle.png" alt="User1" class="rounded-circle"
-                        style="width: 40px; height: 40px">
-                      Margaret: #1
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/dodo.png" alt="User2" class="rounded-circle" style="width: 40px; height: 40px">
-                      Vivian: #2
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card mb-3" style="max-width: 540px">
-          <div class="row g-0">
-            <div class="col-md-4">
-              <img src="images/undertale.jpg" class="img-fluid rounded-start" alt="Minecraft cover">
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5 class="card-title">3. Undertale</h5>
-                <p class="card-text">2015, Toby Fox</p>
-                <div class="col-md-5">
-                  <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/drhouse.png" alt="User1" class="rounded-circle"
-                        style="width: 40px; height: 40px">
-                      Alex: #3
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/masterchief.jpg" alt="User2" class="rounded-circle"
-                        style="width: 40px; height: 40px">
-                      Lucas: #4
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card mb-3" style="max-width: 540px">
-          <div class="row g-0">
-            <div class="col-md-4">
-              <img src="images/ultrakill.jpg" class="img-fluid rounded-start" alt="Minecraft cover">
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5 class="card-title">4. Ultrakill</h5>
-                <p class="card-text">2020, New Blood Interactive</p>
-                <div class="col-md-5">
-                  <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/xboxlive.jpg" alt="User1" class="rounded-circle"
-                        style="width: 40px; height: 40px">
-                      James: #1
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/masterchief.jpg" alt="User2" class="rounded-circle"
-                        style="width: 40px; height: 40px">
-                      Lucas: #15
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card mb-3" style="max-width: 540px">
-          <div class="row g-0">
-            <div class="col-md-4">
-              <img src="images/deltarune.jpg" class="img-fluid rounded-start" alt="Minecraft cover">
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5 class="card-title">5. Deltarune</h5>
-                <p class="card-text">2018, Toby Fox</p>
-                <div class="col-md-5">
-                  <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/isabelle.png" alt="User1" class="rounded-circle"
-                        style="width: 40px; height: 40px">
-                      Margaret: #3
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/drhouse.png" alt="User1" class="rounded-circle"
-                        style="width: 40px; height: 40px">
-                      Alex: #8
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card mb-3" style="max-width: 540px">
-          <div class="row g-0">
-            <div class="col-md-4">
-              <img src="images/finalfantasyxiv.jpg" class="img-fluid rounded-start" alt="Minecraft cover">
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5 class="card-title">6. Final Fantasy XIV Onlne</h5>
-                <p class="card-text">2013, Square Enix</p>
-                <div class="col-md-5">
-                  <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/dodo.png" alt="User1" class="rounded-circle" style="width: 40px; height: 40px">
-                      Vivian: #8
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center ishmael">
-                      <img src="images/mario.png" alt="User2" class="rounded-circle" style="width: 40px; height: 40px">
-                      Ishmael: #10
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card mb-3" style="max-width: 540px">
-          <div class="row g-0">
-            <div class="col-md-4">
-              <img src="images/portal2.jpg" class="img-fluid rounded-start" alt="Minecraft cover">
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5 class="card-title">7. Portal 2</h5>
-                <p class="card-text">2011, Valve</p>
-                <div class="col-md-5">
-                  <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/xboxlive.jpg" alt="User1" class="rounded-circle"
-                        style="width: 40px; height: 40px">
-                      James: #12
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/dodo.png" alt="User2" class="rounded-circle" style="width: 40px; height: 40px">
-                      Vivian: #12
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/isabelle.png" alt="User2" class="rounded-circle"
-                        style="width: 40px; height: 40px">
-                      Margaret: #13
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card mb-3" style="max-width: 540px">
-          <div class="row g-0">
-            <div class="col-md-4">
-              <img src="images/pokemonmysterydungeon.jpg" class="img-fluid rounded-start" alt="Minecraft cover">
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5 class="card-title">
-                  8. Pokemon Mystery Dungeon: Explorers of Sky
-                </h5>
-                <p class="card-text">2009, Nintendo</p>
-                <div class="col-md-5">
-                  <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/drhouse.png" alt="User1" class="rounded-circle"
-                        style="width: 40px; height: 40px">
-                      Alex: #6
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/dodo.png" alt="User2" class="rounded-circle" style="width: 40px; height: 40px">
-                      Vivian: #20
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card mb-3" style="max-width: 540px">
-          <div class="row g-0">
-            <div class="col-md-4">
-              <img src="images/brawl.jpg" class="img-fluid rounded-start" alt="Minecraft cover">
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5 class="card-title">9. Super Smash Bros. Brawl</h5>
-                <p class="card-text">2008, Nintendo</p>
-                <div class="col-md-5">
-                  <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/isabelle.png" alt="User1" class="rounded-circle"
-                        style="width: 40px; height: 40px">
-                      Margaret: #19
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/xboxlive.jpg" alt="User2" class="rounded-circle"
-                        style="width: 40px; height: 40px">
-                      James: #20
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/dodo.png" alt="User2" class="rounded-circle" style="width: 40px; height: 40px">
-                      Vivian: #21
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/drhouse.png" alt="User2" class="rounded-circle"
-                        style="width: 40px; height: 40px">
-                      Alex: #24
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-        <div class="card mb-3" style="max-width: 540px">
-          <div class="row g-0">
-            <div class="col-md-4">
-              <img src="images/sonicmania.jpg" class="img-fluid rounded-start" alt="Minecraft cover">
-            </div>
-            <div class="col-md-8">
-              <div class="card-body">
-                <h5 class="card-title">10. Sonic Mania</h5>
-                <p class="card-text">2017, Sega</p>
-                <div class="col-md-5">
-                  <ul class="list-group">
-                    <li class="list-group-item d-flex justify-content-between align-items-center ishmael">
-                      <img src="images/mario.png" alt="User1" class="rounded-circle" style="width: 40px; height: 40px">
-                      Ishmael: #3
-                    </li>
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                      <img src="images/masterchief.jpg" alt="User2" class="rounded-circle"
-                        style="width: 40px; height: 40px">
-                      Lucas: #28
-                    </li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="container">
-    <div class="d-flex justify-content-center">
-      <a tabindex="1" class="btn btn-primary" href="#" role="button">See More</a>
-    </div>
+    <?php endforeach ?>
   </div>
   <!-- Include Bootstrap JS -->
   <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"
