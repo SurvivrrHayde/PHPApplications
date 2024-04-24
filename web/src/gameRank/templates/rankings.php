@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Sources used: https://www.w3schools.com/cssref/pr_text_white-space.php-->
+<!-- Sources used: https://www.w3schools.com/cssref/pr_text_white-space.php, https://medium.com/@davidmedina0907/using-split-and-trim-for-data-cleaning-in-javascript-1167ceb1d4d6-->
 <html lang="en">
 
 <head>
@@ -14,6 +14,7 @@
   <meta name="author" content="Thomas Arnold, Matthew Haid">
   <meta name="description" content="Game Rank">
   <meta name="keywords" content="video games, games">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <title>Game Rank</title>
     <style>
         .card-img-top {
@@ -42,20 +43,141 @@
         }
 
     </style>
+    <script>
+        $(document).ready(() => {
+            // TODO: finalRankings not in perfectly sorted order
+            let usersQuery = <?= json_encode($_SESSION["currentGroup"]["groupUsers"]); ?>;
+            let users = [];
+            // Getting usernames
+            usersQuery.forEach( (entry) => {
+               users.push(entry.username);
+            });
+            let finalRankingsInit = <?= json_encode($_SESSION["finalRankings"]); ?>;
+            let finalRankings = [];
+            Object.entries(finalRankingsInit).forEach(([gameId, ranking]) => {
+                finalRankings.push({gameId: gameId, ranking: ranking});
+            });
+            let sortByMyRanking = $("#sortByMyRanking");
+            let sortByOriginal = $("#sortByOriginal");
+            let sortNameOptions = $(".sortNameOption");
+            let myUserName = "<?= $_SESSION['user']['userName']; ?>";
+            let userRankings = extractUserRankings();
+            let originalRankings = getOriginalOrder();
+
+            sortByMyRanking.click(() => {
+                displayRankings(userRankings[myUserName]);
+            });
+
+            sortByOriginal.click(() => {
+                displayRankings(originalRankings);
+            })
+
+            sortNameOptions.click(function() {
+                let username = $(this).text().split("'s Rankings")[0].trim();
+                sortByUser(username);
+            });
+
+            // Where rankings is JSON {gameid : rank}
+            function displayRankings(rankings) {
+                let rankCols = {};
+                let rankContainer = $(".rankContainer");
+                $(".rankCol").each(function() {
+                    let gameId = $(this).attr('id');
+                    rankCols[gameId] = $(this).detach();
+                });
+                rankContainer.empty();
+                rankings.forEach((entry) => {
+                   rankContainer.append(rankCols[entry.gameId]);
+                });
+            }
+
+            function getOriginalOrder() {
+                let rankings = [];
+                $(".rankCol").each(function() {
+                    let gameId = $(this).attr('id');
+                    let cardTitle = $(this).find('.card-title').text();
+                    let ranking = parseInt(cardTitle.split('.')[0]);
+                    rankings.push({ gameId: gameId, ranking: ranking });
+                });
+                return rankings;
+            }
+
+            function sortByUser(username) {
+                let rankings = [];
+                let userRankingsForUser = userRankings[username];
+                userRankingsForUser.forEach(entry => {
+                    rankings.push({gameId: entry.gameId, ranking: entry.ranking})
+                });
+                displayRankings(rankings);
+            }
+
+            function extractUserRankings() {
+                let userRankings = {};
+                for (let i = 0; i < users.length; i++) {
+                    let curUser = users[i];
+                    $(".rankCol").each(function() {
+                        let gameId = $(this).attr('id');
+                        let rankingText = $(this).find('.' + curUser + 'pText').text().split(':')[1];
+                        let ranking = rankingText ? parseInt(rankingText.replace('#', '')) : Infinity;
+                        if (!userRankings[curUser]) {
+                            userRankings[curUser] = [];
+                        }
+                        userRankings[curUser].push({ gameId: gameId, ranking: ranking });
+                    });
+                    // Add games that the user didn't rank at the bottom
+                    for (let user in userRankings) {
+                        finalRankings.forEach(entry => {
+                            let gameId = entry.gameId;
+                            if (!userRankings[user].some(entry => entry.gameId === gameId)) {
+                                userRankings[user].push({ gameId: gameId, ranking: Infinity });
+                            }
+                        });
+                    }
+                    for (let user in userRankings) {
+                        userRankings[user].sort((a, b) => a.ranking - b.ranking);
+                    }
+                }
+                return userRankings;
+            }
+        });
+    </script>
 </head>
 
 <body>
   <!-- Navbar -->
   <?php include "/opt/src/gameRank/templates/navbar.php"; ?>
   <?php
-  // TODO: Null checking on these values
-  error_reporting(E_ALL);
-  ini_set("display_errors", 1);
+//  error_reporting(E_ALL);
+//  ini_set("display_errors", 1);
   $groupName = $_SESSION["currentGroup"]["groupName"];
   $groupId = $_SESSION["currentGroup"]["groupId"];
   $finalRankings = $_SESSION["finalRankings"];
   $iterator = 1;
+  $usersInGroup = $_SESSION["currentGroup"]["groupUsers"];
   ?>
+  <div class="row">
+      <div class="col-md-9"></div>
+      <div class="col-md-3">
+          <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                      aria-expanded="false">
+                  Sort By...
+              </button>
+              <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" id="sortByOriginal"> Original </a></li>
+                  <li><a class="dropdown-item" id="sortByMyRanking">Your Rankings</a></li>
+                  <?php foreach($usersInGroup as $ug): ?>
+                  <?php
+                      if ($ug['username'] == $_SESSION['user']['userName']) {
+                          continue;
+                      }
+                      ?>
+                  <li><a class="dropdown-item sortNameOption" id="sortBy<?= $ug['username'] ?>"> <?= $ug['username'] ?>'s Rankings </a></li>
+                  <?php endforeach; ?>
+              </ul>
+          </div>
+      </div>
+  </div>
   <div class="d-flex justify-content-left">
     <a tabindex="0" class="btn btn-primary" href="?command=showRankGroup" role="button">
       Back to Group
@@ -64,7 +186,7 @@
   <div class="top-headers">
     <h1>Without further ado... here are the favorite games of <?= $groupName ?>!</h1>
   </div>
-  <div class="card-group justify-content-start">
+  <div class="card-group justify-content-start rankContainer">
     <?php foreach($finalRankings as $gameId => $points): ?>
         <?php
         $curCoverQuery = $this->db->query("SELECT cover FROM Games WHERE gameid = $1", $gameId);
@@ -79,7 +201,7 @@
             $userIds[] = $usersThatVotedForQuery[$i]["userid"];
         }
         ?>
-        <div class="col">
+        <div class="col rankCol" id="<?= $gameId ?>">
             <div class="card h-100 rankCard">
                 <img alt="<?= $curGameName ?> cover" class="card-img-top" src="<?= $curCover ?>">
                 <div class="card-body">
@@ -90,7 +212,7 @@
                         $usersRanking = $this->db->query("SELECT ranking FROM UserGameRankings WHERE userid = $1 AND groupid = $2 AND gameid = $3", $curUserId, $groupId, $gameId)[0]["ranking"];
                         ?>
                         <div class="whoRanked">
-                            <p class="card-text">
+                            <p class="card-text <?= $username ?>pText">
                                 <?= $username ?>: #<?= $usersRanking ?>
                             </p>
                         </div>
