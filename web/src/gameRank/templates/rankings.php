@@ -45,28 +45,42 @@
     </style>
     <script>
         $(document).ready(() => {
-            let finalRankings = <?= json_encode($_SESSION["finalRankings"]); ?>;
+            // TODO: finalRankings not in perfectly sorted order
+            let finalRankingsInit = <?= json_encode($_SESSION["finalRankings"]); ?>;
+            let finalRankings = [];
+            Object.entries(finalRankingsInit).forEach(([gameId, ranking]) => {
+                finalRankings.push({gameId: gameId, ranking: ranking});
+            });
             let sortByMyRanking = $("#sortByMyRanking");
             let sortByOriginal = $("#sortByOriginal");
             let sortNameOptions = $(".sortNameOption");
+            let myUserName = "<?= $_SESSION['user']['userName']; ?>";
             let userRankings = extractUserRankings();
-            console.log(userRankings);
             sortByMyRanking.click(() => {
-
+                displayRankings(userRankings[myUserName]);
             });
+
+            sortByOriginal.click(() => {
+                displayRankings(finalRankings);
+            })
 
             sortNameOptions.click(function() {
                 let username = $(this).text().split("'s Rankings")[0].trim();
                 sortByUser(username);
             });
 
-            // Where rankings is an array of game id's
+            // Where rankings is JSON {gameid : order}
             function displayRankings(rankings) {
-
+                console.log(rankings);
             }
 
             function sortByUser(username) {
-
+                let rankings = [];
+                let userRankingsForUser = userRankings[username];
+                userRankingsForUser.forEach(entry => {
+                    rankings.push({gameId: entry.gameId, ranking: entry.ranking})
+                });
+                displayRankings(rankings);
             }
 
             function extractUserRankings() {
@@ -85,7 +99,6 @@
                 }
                 return userRankings;
             }
-
         });
     </script>
 </head>
