@@ -48,7 +48,6 @@
             let finalRankings = <?= json_encode($_SESSION["finalRankings"]); ?>;
             let sortByMyRanking = $("#sortByMyRanking");
             let sortByOriginal = $("#sortByOriginal");
-            console.log(extractUserRankings());
             sortByMyRanking.click(() => {
 
             });
@@ -83,6 +82,15 @@
 <body>
   <!-- Navbar -->
   <?php include "/opt/src/gameRank/templates/navbar.php"; ?>
+  <?php
+//  error_reporting(E_ALL);
+//  ini_set("display_errors", 1);
+  $groupName = $_SESSION["currentGroup"]["groupName"];
+  $groupId = $_SESSION["currentGroup"]["groupId"];
+  $finalRankings = $_SESSION["finalRankings"];
+  $iterator = 1;
+  $usersInGroup = $_SESSION["currentGroup"]["groupUsers"];
+  ?>
   <div class="row">
       <div class="col-md-9"></div>
       <div class="col-md-3">
@@ -92,21 +100,20 @@
                   Sort By...
               </button>
               <ul class="dropdown-menu">
-                  <li><a class="dropdown-item" id="sortByMyRanking">Your Rankings</a></li>
                   <li><a class="dropdown-item" id="sortByOriginal"> Original </a></li>
+                  <li><a class="dropdown-item sortNameOption" id="sortByMyRanking">Your Rankings</a></li>
+                  <?php foreach($usersInGroup as $ug): ?>
+                  <?php
+                      if ($ug['username'] == $_SESSION['user']['userName']) {
+                          continue;
+                      }
+                      ?>
+                  <li><a class="dropdown-item sortNameOption" id="sortBy<?= $ug['username'] ?>"> <?= $ug['username'] ?>'s Rankings </a></li>
+                  <?php endforeach; ?>
               </ul>
           </div>
       </div>
   </div>
-  <?php
-  // TODO: Null checking on these values
-//  error_reporting(E_ALL);
-//  ini_set("display_errors", 1);
-  $groupName = $_SESSION["currentGroup"]["groupName"];
-  $groupId = $_SESSION["currentGroup"]["groupId"];
-  $finalRankings = $_SESSION["finalRankings"];
-  $iterator = 1;
-  ?>
   <div class="d-flex justify-content-left">
     <a tabindex="0" class="btn btn-primary" href="?command=showRankGroup" role="button">
       Back to Group
