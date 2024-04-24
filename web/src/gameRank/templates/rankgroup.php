@@ -190,7 +190,7 @@ $currentDateTime = new DateTime();
                         <h5 class="card-title">
                             <?= $rank ?>. <?= $name ?>
                         </h5>
-                        <a style="color: #1c7cb8" href="/gamerank/?command=detail&id=<?= $gameid ?>"> Learn More </a>
+                        <a style="color: #1c7cb8" href="?command=detail&id=<?= $gameid ?>"> Learn More </a>
                         <?php if ($currentDateTime < $deadlineDateTime): ?>
                         <div>
                             <form class="removeGameForm">

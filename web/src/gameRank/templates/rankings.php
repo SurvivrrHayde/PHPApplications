@@ -217,7 +217,7 @@
                             </p>
                         </div>
                     <?php endforeach; ?>
-                    <a style="color: #1c7cb8" href="/gamerank/?command=detail&id=<?= $gameId ?>"> Learn More </a>
+                    <a style="color: #1c7cb8" href="?command=detail&id=<?= $gameId ?>"> Learn More </a>
                 </div>
             </div>
         </div>
