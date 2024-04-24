@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<!-- Sources used: https://www.w3schools.com/cssref/pr_text_white-space.php-->
+<!-- Sources used: https://www.w3schools.com/cssref/pr_text_white-space.php, https://medium.com/@davidmedina0907/using-split-and-trim-for-data-cleaning-in-javascript-1167ceb1d4d6-->
 <html lang="en">
 
 <head>
@@ -14,6 +14,7 @@
   <meta name="author" content="Thomas Arnold, Matthew Haid">
   <meta name="description" content="Game Rank">
   <meta name="keywords" content="video games, games">
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <title>Game Rank</title>
     <style>
         .card-img-top {
@@ -42,15 +43,65 @@
         }
 
     </style>
+    <script>
+        $(document).ready(() => {
+            let finalRankings = <?= json_encode($_SESSION["finalRankings"]); ?>;
+            let sortByMyRanking = $("#sortByMyRanking");
+            let sortByOriginal = $("#sortByOriginal");
+            console.log(extractUserRankings());
+            sortByMyRanking.click(() => {
+
+            });
+
+            sortByMyRanking.click(() => {
+
+            });
+
+            function displayRankings(rankings) {
+
+            }
+
+            function extractUserRankings() {
+                let userRankings = {};
+                $(".rankCol").each(function() {
+                    let username = $(this).find('.card-text').text().split(':')[0].trim();
+                    let gameId = $(this).attr('id');
+                    let ranking = parseInt($(this).find('.card-title').text().split('.')[0]);
+                    if (!userRankings[username]) {
+                        userRankings[username] = {};
+                    }
+                    userRankings[username][gameId] = ranking;
+                });
+                return userRankings;
+            }
+
+
+        });
+    </script>
 </head>
 
 <body>
   <!-- Navbar -->
   <?php include "/opt/src/gameRank/templates/navbar.php"; ?>
+  <div class="row">
+      <div class="col-md-9"></div>
+      <div class="col-md-3">
+          <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                      aria-expanded="false">
+                  Sort By...
+              </button>
+              <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" id="sortByMyRanking">Your Rankings</a></li>
+                  <li><a class="dropdown-item" id="sortByOriginal"> Original </a></li>
+              </ul>
+          </div>
+      </div>
+  </div>
   <?php
   // TODO: Null checking on these values
-  error_reporting(E_ALL);
-  ini_set("display_errors", 1);
+//  error_reporting(E_ALL);
+//  ini_set("display_errors", 1);
   $groupName = $_SESSION["currentGroup"]["groupName"];
   $groupId = $_SESSION["currentGroup"]["groupId"];
   $finalRankings = $_SESSION["finalRankings"];
@@ -79,7 +130,7 @@
             $userIds[] = $usersThatVotedForQuery[$i]["userid"];
         }
         ?>
-        <div class="col">
+        <div class="col rankCol" id="<?= $gameId ?>">
             <div class="card h-100 rankCard">
                 <img alt="<?= $curGameName ?> cover" class="card-img-top" src="<?= $curCover ?>">
                 <div class="card-body">
