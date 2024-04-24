@@ -46,6 +46,12 @@
     <script>
         $(document).ready(() => {
             // TODO: finalRankings not in perfectly sorted order
+            let usersQuery = <?= json_encode($_SESSION["currentGroup"]["groupUsers"]); ?>;
+            let users = [];
+            // Getting usernames
+            usersQuery.forEach( (entry) => {
+               users.push(entry.username);
+            });
             let finalRankingsInit = <?= json_encode($_SESSION["finalRankings"]); ?>;
             let finalRankings = [];
             Object.entries(finalRankingsInit).forEach(([gameId, ranking]) => {
@@ -69,9 +75,18 @@
                 sortByUser(username);
             });
 
-            // Where rankings is JSON {gameid : order}
+            // Where rankings is JSON {gameid : rank}
             function displayRankings(rankings) {
-                console.log(rankings);
+                let rankCols = {};
+                let rankContainer = $(".rankContainer");
+                $(".rankCol").each(function() {
+                    let gameId = $(this).attr('id');
+                    rankCols[gameId] = $(this).detach();
+                });
+                rankContainer.empty();
+                rankings.forEach((entry) => {
+                   rankContainer.append(rankCols[entry.gameId]);
+                });
             }
 
             function sortByUser(username) {
@@ -85,17 +100,29 @@
 
             function extractUserRankings() {
                 let userRankings = {};
-                $(".rankCol").each(function() {
-                    let username = $(this).find('.card-text').text().split(':')[0].trim();
-                    let gameId = $(this).attr('id');
-                    let ranking = parseInt($(this).find('.card-title').text().split('.')[0]);
-                    if (!userRankings[username]) {
-                        userRankings[username] = [];
+                for (let i = 0; i < users.length; i++) {
+                    let curUser = users[i];
+                    $(".rankCol").each(function() {
+                        let gameId = $(this).attr('id');
+                        let rankingText = $(this).find('.' + curUser + 'pText').text().split(':')[1];
+                        let ranking = rankingText ? parseInt(rankingText.replace('#', '')) : Infinity;
+                        if (!userRankings[curUser]) {
+                            userRankings[curUser] = [];
+                        }
+                        userRankings[curUser].push({ gameId: gameId, ranking: ranking });
+                    });
+                    // Add games that the user didn't rank at the bottom
+                    for (let user in userRankings) {
+                        finalRankings.forEach(entry => {
+                            let gameId = entry.gameId;
+                            if (!userRankings[user].some(entry => entry.gameId === gameId)) {
+                                userRankings[user].push({ gameId: gameId, ranking: Infinity });
+                            }
+                        });
                     }
-                    userRankings[username].push({ gameId: gameId, ranking: ranking });
-                });
-                for (let user in userRankings) {
-                    userRankings[user].sort((a, b) => a.ranking - b.ranking);
+                    for (let user in userRankings) {
+                        userRankings[user].sort((a, b) => a.ranking - b.ranking);
+                    }
                 }
                 return userRankings;
             }
@@ -146,7 +173,7 @@
   <div class="top-headers">
     <h1>Without further ado... here are the favorite games of <?= $groupName ?>!</h1>
   </div>
-  <div class="card-group justify-content-start">
+  <div class="card-group justify-content-start rankContainer">
     <?php foreach($finalRankings as $gameId => $points): ?>
         <?php
         $curCoverQuery = $this->db->query("SELECT cover FROM Games WHERE gameid = $1", $gameId);
@@ -172,7 +199,7 @@
                         $usersRanking = $this->db->query("SELECT ranking FROM UserGameRankings WHERE userid = $1 AND groupid = $2 AND gameid = $3", $curUserId, $groupId, $gameId)[0]["ranking"];
                         ?>
                         <div class="whoRanked">
-                            <p class="card-text">
+                            <p class="card-text <?= $username ?>pText">
                                 <?= $username ?>: #<?= $usersRanking ?>
                             </p>
                         </div>
