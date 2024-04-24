@@ -81,13 +81,13 @@ for ($i = 0; $i < $numResults; $i++) {
     echo "<div class='col'>";
         echo "<div class='card h-100'>";
         if ($img_src) {
-            echo "<a href='/gamerank/?command=detail&id=$game_id'>";
+            echo "<a href='?command=detail&id=$game_id'>";
             echo "<img alt='$game_name Cover' src='$img_src' class='card-img-top'/>";
             echo "</a>";
         }
         echo "<div class='card-body' id='$game_id'>";
             echo "<h5 class='card-title'> $game_name </h5>";
-            echo "<a href='/gamerank/?command=detail&id=$game_id'> Details </a>";
+            echo "<a href='?command=detail&id=$game_id'> Details </a>";
         echo "</div> </div> </div>";
 }
 echo "</div>";
