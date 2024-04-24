@@ -48,15 +48,24 @@
             let finalRankings = <?= json_encode($_SESSION["finalRankings"]); ?>;
             let sortByMyRanking = $("#sortByMyRanking");
             let sortByOriginal = $("#sortByOriginal");
+            let sortNameOptions = $(".sortNameOption");
+            let userRankings = extractUserRankings();
+            console.log(userRankings);
             sortByMyRanking.click(() => {
 
             });
 
-            sortByMyRanking.click(() => {
-
+            sortNameOptions.click(function() {
+                let username = $(this).text().split("'s Rankings")[0].trim();
+                sortByUser(username);
             });
 
+            // Where rankings is an array of game id's
             function displayRankings(rankings) {
+
+            }
+
+            function sortByUser(username) {
 
             }
 
@@ -67,13 +76,15 @@
                     let gameId = $(this).attr('id');
                     let ranking = parseInt($(this).find('.card-title').text().split('.')[0]);
                     if (!userRankings[username]) {
-                        userRankings[username] = {};
+                        userRankings[username] = [];
                     }
-                    userRankings[username][gameId] = ranking;
+                    userRankings[username].push({ gameId: gameId, ranking: ranking });
                 });
+                for (let user in userRankings) {
+                    userRankings[user].sort((a, b) => a.ranking - b.ranking);
+                }
                 return userRankings;
             }
-
 
         });
     </script>
@@ -101,7 +112,7 @@
               </button>
               <ul class="dropdown-menu">
                   <li><a class="dropdown-item" id="sortByOriginal"> Original </a></li>
-                  <li><a class="dropdown-item sortNameOption" id="sortByMyRanking">Your Rankings</a></li>
+                  <li><a class="dropdown-item" id="sortByMyRanking">Your Rankings</a></li>
                   <?php foreach($usersInGroup as $ug): ?>
                   <?php
                       if ($ug['username'] == $_SESSION['user']['userName']) {
