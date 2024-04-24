@@ -62,12 +62,14 @@
             let sortNameOptions = $(".sortNameOption");
             let myUserName = "<?= $_SESSION['user']['userName']; ?>";
             let userRankings = extractUserRankings();
+            let originalRankings = getOriginalOrder();
+
             sortByMyRanking.click(() => {
                 displayRankings(userRankings[myUserName]);
             });
 
             sortByOriginal.click(() => {
-                displayRankings(finalRankings);
+                displayRankings(originalRankings);
             })
 
             sortNameOptions.click(function() {
@@ -87,6 +89,17 @@
                 rankings.forEach((entry) => {
                    rankContainer.append(rankCols[entry.gameId]);
                 });
+            }
+
+            function getOriginalOrder() {
+                let rankings = [];
+                $(".rankCol").each(function() {
+                    let gameId = $(this).attr('id');
+                    let cardTitle = $(this).find('.card-title').text();
+                    let ranking = parseInt(cardTitle.split('.')[0]);
+                    rankings.push({ gameId: gameId, ranking: ranking });
+                });
+                return rankings;
             }
 
             function sortByUser(username) {
