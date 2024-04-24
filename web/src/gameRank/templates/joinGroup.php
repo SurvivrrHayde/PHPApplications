@@ -25,7 +25,7 @@
                 <h3 class="login-header text-center">Join Group</h3>
                 <div class="card">
                     <div class="card-body">
-                        <form id="login-form" method="post" action="?command=joinGroup">
+                        <form id="login-form" method="post" action="?command=joinGroup" onsubmit="return validateForm()">
                             <div class="mb-3">
                                 <label for="inputGroupName" class="form-label white">Group Name</label>
                                 <input type="text" class="form-control" id="inputGroupName" name="groupName" autofocus>
@@ -33,6 +33,7 @@
                             <div class="d-grid mb-2">
                                 <button class="btn btn-primary mt-1" type="submit">Join Group</button>
                             </div>
+                            <div id="error-message" style="color: red;"></div>
                         </form>
                         <?= $message ?>
                     </div>
@@ -48,6 +49,22 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
+    <script>
+    function validateForm() {
+      var groupName = document.getElementById("inputGroupName").value;
+      var formData = {
+        groupName: groupName,
+      };
+
+      if (groupName.trim() === ""){
+        document.getElementById("error-message").textContent = "Please fill out all the fields.";
+        return false;
+      }
+
+      document.getElementById("error-message").textContent = "";
+      return true;
+    }
+  </script>
 </body>
 
 </html>

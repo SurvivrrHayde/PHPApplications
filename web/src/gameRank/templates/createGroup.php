@@ -18,14 +18,14 @@
 
 <body>
     <!-- Navbar -->
-    <?php include "/students/wsd6vn/students/wsd6vn/private/gameRank/templates/navbar.php"; ?>
+    <?php include "/opt/src/gameRank/templates/navbar.php"; ?>
     <div class="container">
         <div class="row justify-content-center">
             <div class="col-md-4 mt-5">
                 <h3 class="login-header text-center">Create Group</h3>
                 <div class="card">
                     <div class="card-body">
-                        <form id="login-form" method="post" action="?command=createGroup">
+                        <form id="login-form" method="post" action="?command=createGroup" onsubmit="return validateForm()">
                             <div class="mb-3">
                                 <label for="inputGroupName" class="form-label white">Group Name</label>
                                 <input type="text" class="form-control" id="inputGroupName" name="groupName" autofocus>
@@ -37,6 +37,7 @@
                             <div class="d-grid mb-2">
                                 <button class="btn btn-primary mt-1" type="submit">Create Group</button>
                             </div>
+                            <div id="error-message" style="color: red;"></div>
                         </form>
                         <?= $message ?>
                     </div>
@@ -52,6 +53,35 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"
         integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy"
         crossorigin="anonymous"></script>
+        <script>
+    function validateForm() {
+      var groupName = document.getElementById("inputGroupName").value;
+      var deadline = document.getElementById("inputDeadline").value;
+      var formData = {
+        groupName: groupName,
+        deadline: deadline,
+      };
+
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+    
+      const deadlineDate = new Date(deadline);
+      deadlineDate.setHours(0, 0, 0, 0);
+
+      if (groupName.trim() === "" || deadline.trim() === ""){
+        document.getElementById("error-message").textContent = "Please fill out all the fields.";
+        return false;
+      }
+ 
+     if (deadlineDate < today) {
+        document.getElementById("error-message").textContent = "Deadline can not be in the past or today.";
+        return false;
+     }
+
+      document.getElementById("error-message").textContent = "";
+      return true;
+    }
+  </script>
 </body>
 
 </html>
